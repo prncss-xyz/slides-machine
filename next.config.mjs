@@ -1,6 +1,9 @@
 import { remarkCodeHike, recmaCodeHike } from "codehike/mdx";
 import { basePath } from "./base-path.mjs";
+import rehypeImgSize from "rehype-img-size";
+import rehypeMdxImportMedia from "rehype-mdx-import-media";
 import rehypeSlides from "./rehype-slides.mjs";
+import rehypeMermaid from "rehype-mermaid";
 import createMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
@@ -28,13 +31,19 @@ const nextConfig = {
 /** @type {import('codehike/mdx').CodeHikeConfig} */
 const chConfig = {
   components: { code: "Code" },
+  ignoreCode: (codeblock) => codeblock.lang === "mermaid",
 };
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
     remarkPlugins: [[remarkCodeHike, chConfig]],
-    rehypePlugins: [rehypeSlides],
+    rehypePlugins: [
+      rehypeSlides,
+      rehypeMermaid,
+      rehypeMdxImportMedia,
+      rehypeImgSize,
+    ],
     recmaPlugins: [[recmaCodeHike, chConfig]],
     jsx: true,
   },

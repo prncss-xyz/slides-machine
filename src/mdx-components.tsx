@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import NextLink from "next/link";
 import { Heading, Link, Text } from "@radix-ui/themes";
 import { Slide } from "./slides/slides";
+import { Img } from "./components/next/img";
 
 const h1 = (props: { children?: ReactNode }) => (
   <Heading weight="bold" size="9" mb="6" as="h1" {...props} />
@@ -54,11 +55,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     a,
     img: (props) => (
       // eslint-disable-next-line jsx-a11y/alt-text
-      <img
-        sizes="100vw"
-        style={{ maxWidth: "100%", height: "auto" }}
-        {...props}
-      />
+      // @ts-expect-error src can be undefined
+      <Img unoptimized {...props} />
     ),
     Code,
   };

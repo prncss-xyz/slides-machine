@@ -19,9 +19,13 @@
     "next-image-export-optimizer": "^1.15.1",
     "next-themes": "^0.3.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "rehype-img-size": "^1.0.1",
+    "rehype-mdx-import-media": "^1.2.0",
+    "rehype-mermaid": "^3.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
     "@types/mdx": "^2.0.13",
     "@types/node": "^20",
     "@types/react": "^18",
