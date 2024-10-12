@@ -35,6 +35,8 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Install Playwright Browser Chromium
+        run: pnpm exec playwright install chromium --with-deps
       - uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/.next/cache
