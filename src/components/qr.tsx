@@ -1,15 +1,16 @@
-import { Box } from "@radix-ui/themes";
-import { Img } from "./next/img";
+import { Box } from '@radix-ui/themes'
+import qrcode from 'qrcode'
 
-const side = 400;
-const sidePx = `${side}px`;
+const side = 400
 
-export function QR({ name, src }: { name: string; src: string }) {
-  return (
-    <Box py="3">
-      <Box width={sidePx} height={sidePx}>
-        <Img src={src} alt={name} unoptimized />
-      </Box>
-    </Box>
-  );
+// TODO: SVG
+export async function QR({ name, href }: { name: string; href: string }) {
+	const src = await qrcode.toDataURL(href)
+	return (
+		<Box py="3">
+			<a href={href} target="_blank">
+				<img src={src} alt={name} width={side} height={side} />
+			</a>
+		</Box>
+	)
 }
