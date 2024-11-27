@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import '@radix-ui/themes/styles.css'
 import './globals.css'
-import { Box, Container, Theme } from '@radix-ui/themes'
-import { ThemeProvider } from 'next-themes'
+import { Box, Theme } from '@radix-ui/themes'
 import { KeyNav } from '@/slides/keynav'
 import { Toaster } from 'react-hot-toast'
 
@@ -31,16 +30,12 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
-				<ThemeProvider attribute="class">
 					<Theme>
-						<Container size="4">
-							<KeyNav>
-								<Box m="5">{children}</Box>
-								<Toaster />
-							</KeyNav>
-						</Container>
+						<KeyNav>
+							<Box px="9" py="">{children}</Box>
+							<Toaster />
+						</KeyNav>
 					</Theme>
-				</ThemeProvider>
 			</body>
 		</html>
 	)

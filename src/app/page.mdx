@@ -4,24 +4,14 @@ import { Flex, Box, Card } from '@radix-ui/themes'
 import { Timer } from './samples/timer/component.tsx'
 import { Turnstile } from './samples/turnstile/component.tsx'
 import { Turnstile2 } from './samples/turnstile2/component.tsx'
+import { Feedback } from '@/components/feedback'
+
 
 # State Machines:
 
 ## Sometimes a Library, Always a Pattern
 
 _by Juliette Lamarche_
-
----
-
-## State Management vs State Manipulation
-
-- functional core
-- separate state logic from reactivity
-- testable
-- across front-ends and state management libraries
-- vs XState
-  - own system
-  - must be synced with front-end
 
 ---
 
@@ -46,8 +36,8 @@ _by Juliette Lamarche_
     - optics 
     - _e.g.:_ form-like, query object
   </Box>
-  <Box maxWidth="400px" maxHeight="400px" overflow="hidden">
-    ![filter](./filter.png)b
+  <Box maxWidth="50vh" maxHeight="50vh" overflow="hidden">
+    ![filter](./filter.png)
   </Box>
 </Flex>
 
@@ -57,7 +47,7 @@ _by Juliette Lamarche_
 
 ### Update by Events
 
-<Box maxWidth="400px" maxHeight="400px">
+<Box maxWidth="40vh" maxHeight="40vh">
 	![traffic lights](./lights.jpg)
 </Box>
 
@@ -69,14 +59,14 @@ _by Juliette Lamarche_
 
 <Flex gap="6" align="center">
 	<Box>
-		- useReducer, Redux 
+		- useReducer, Redux (actions)
     - asymmetry between reads and writes (different types)
     - restricted set of allowed transitions 
     - result of an event can depend on the current state 
     - states and events have different types 
     - state machines
 	</Box>
-	<Box maxWidth="400px" maxHeight="400px">
+	<Box>
 		```mermaid
     stateDiagram-v2 
       [*] --> green 
@@ -86,20 +76,6 @@ _by Juliette Lamarche_
     ```
 	</Box>
 </Flex>
-
----
-
-## Events vs Values
-
-### What if you use the wrong pattern?
-
-- writing every transition of a free state would be
-  - awkward, repetitive, error-prone
-  - bad separation of concerns
-  - would miss the intention
-- handling state machine as a free value would
-  - disperse the business logic in the handlers
-  - make it harder to trace the source of an update
 
 ---
 
@@ -122,11 +98,11 @@ _by Juliette Lamarche_
 ### Turnstile Gate
 
 <Flex gap="6" align="center">
-  <Box maxWidth="400px" maxHeight="400px">
+  <Box maxWidth="40vh" maxHeight="40vh">
     ![turnstile gate](./turnstile.jpg)
   </Box>
 	<Card>
-    <Box width="120px">
+    <Box width="15vh">
       <Turnstile />
     </Box>
   </Card>
@@ -177,7 +153,7 @@ _by Juliette Lamarche_
 	</Box>
   <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box width="120px">
+      <Box width="15vh">
         <Turnstile />
       </Box>
     </Card>
@@ -203,7 +179,7 @@ _by Juliette Lamarche_
 	</Box>
   <Flex gap="6" direction="column" justify="center" align="center">
     <Card>
-      <Box width="120px">
+      <Box width="15vh">
         <Turnstile />
       </Box>
     </Card>
@@ -272,38 +248,9 @@ function Loader() {
     ```
     <Box>
       - initial/final states
-      - make inconsistent states impossible
+      - make illegal states irrepresentable
       - express the succession of events
-      - convoluted way of doing nothing
-    </Box>
-  </Flex>
-  <Box maxHeight="80vh" overflow="scroll">
-    ```typescript
-    !from ./samples/loader/machine.ts
-    ```
-  </Box>
-</Flex>
-
----
-
-## Finite State Machines
-
-### Loader
-
-<Flex gap="6" justify="between" align="center">
-  <Flex gap="6" direction="column" align="center">
-    ```mermaid
-    stateDiagram-v2
-      [*] --> loading
-      loading --> error: error
-      loading --> success: success
-      error --> [*]
-      success --> [*]
-    ```
-    <Box>
-      - same semantics
-      - more concise
-      - less extensible
+      - no business logic in the handlers
     </Box>
   </Flex>
   <Box maxHeight="80vh" overflow="scroll">
@@ -450,30 +397,22 @@ function Loader() {
 
 ---
 
-## Extended Finite State Machines
-
-### Library (constellar)
-
-<Flex gap="6" justify="between" align="center">
-<Box maxHeight="80vh" overflow="scroll">
-  ```typescript
-  !from ./samples/ignore/timer-constellar.ts 3:53
-  ```
-</Box>
-<Box maxWidth="300px">
-  - objects instead of `switch` statements (type safe)
-  - computed values at the same place as events (cohesion)
-</Box>
-</Flex>
-
----
-
 ## Effects and Messages
 
 ### Turnstile Gate
 
-<Flex gap="6" justify="between" align="center">
-	<Flex gap="6" direction="column" align="center">
+<Flex gap="6" direction="column" justify="between" align="center">
+	<Flex gap="9" direction="row" align="center">
+		```mermaid
+    stateDiagram-v2
+      [*] --> locked 
+      locked --> payment: pay 
+      payment --> success: success
+      success --> unlocked: next
+      payment --> error: error
+      error --> locked: next
+      unlocked --> locked: push 
+    ```
 		```mermaid
     stateDiagram-v2
       [*] --> locked 
@@ -482,13 +421,23 @@ function Loader() {
       payment --> locked: error
       unlocked --> locked: push 
     ```
+	</Flex>
   <Box>
     - effects (`success` and `error` events)
       - two-way communication
     - messages (choose impurity)
       - one way communication
+      - avoid junk states
   </Box>
-	</Flex>
+</Flex>
+
+---
+
+## Effects and Messages
+
+### Turnstile Gate
+
+<Flex gap="6" justify="between" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```typescript
     !from ./samples/turnstile2/machine.ts
@@ -502,7 +451,7 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center">
+<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```tsx 
     !from ./samples/turnstile2/component.tsx 8:114
@@ -510,7 +459,7 @@ function Loader() {
 	</Box>
   <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box width="255px">
+      <Box>
         <Turnstile2 />
       </Box>
     </Card>
@@ -518,13 +467,7 @@ function Loader() {
       - `useMachine`: 
         - `useReaducer` won't allow side effects
         - messages implementation is injected
-      - effects (concurrent rerendering)
-        - cached
-        - cancelable
-        - POST like effects need a dummy time parameter
-        - outside react (store, out of tree, back-end)
-          - don't need to worry about this
-          - have to reimplement an effect system
+      - cached effects because concurrent rerendering
     </Box>
   </Flex>
 </Flex>
@@ -537,8 +480,11 @@ function Loader() {
 ![state explosion](./state-explosion.webp)
 </Box>
 
+- as complexity grows, usual clean code concerns araise ("god machine" as "god function" or "god class")
+  - multiple responsibilities
+  - multiple abstraction levels
 - in a typical application, number of independent state will multiply for each component
-- exponentional growth
+  - exponentional growth
 
 ---
 
@@ -571,6 +517,7 @@ function Loader() {
 -how
   - serializable core (vs computed state)
   - replay
+    - merging decentralized updates
 - unreachable states
   - `plusTwo`
   - design smell (make inconsistent states impossible)
@@ -617,27 +564,44 @@ function Loader() {
 
 # Library vs Pattern
 
+## Robot
+
 <Flex 
   gap="6" 
   direction="column" 
 >
   <Box>
   - [Robot](https://thisrobot.life/)
-    - lightweight (1kb)
-    - context
-    - reactive system is redundant with front-end framework
+  - lightweight (1kb)
+  - context
+  - reactive system is redundant with front-end framework
   </Box>
+</Flex>
+
+---
+
+# Library vs Pattern
+
+## Constellar
+
+<Flex 
+  gap="6" 
+  direction="row" 
+>
   <Box>
   - [Constellar](https://prncss-xyz.github.io/constellar/)
-    - personal project
-    - not production ready
-    - clear separation of concerns
-      - jotai integration
-    - multiple state (vs context)
-    - optics
-    - would love your feedback and your stars (but mostly you feedback)
-    - maybe we can make it production ready together!
+  - personal project
+  - not production ready
+  - clear separation of concerns
+    - jotai integration
+  - multiple state (vs context)
+  - optics
+  - would love your feedback and your stars (but mostly you feedback)
+  - maybe we can make it production ready together!
   </Box>
+  <Flex direction="column" gap="1" align="center">
+    <QR name="constellar" href="https://prncss-xyz.github.io/constellar/" />
+  </Flex>
 </Flex>
 
 ---
@@ -647,11 +611,18 @@ function Loader() {
 ### Let's connect
 
 <Flex gap="6" align="center" >
+  <Flex gap="6" align="end" >
+    <Flex direction="column" gap="1" align="center">
+      <QR name="linkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
+      LinkedIn
+    </Flex>
+    <Flex direction="column" gap="1" align="center">
+      <Feedback />
+      Feedback
+    </Flex>
+  </Flex>
   <Box>
-    <QR name="linkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
-  </Box>
-  <Box>
-    about me
+    **about me**
     - full stack developer
     - self-taught, math background
     - TypeScript, React, FP

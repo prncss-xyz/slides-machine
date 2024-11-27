@@ -35,7 +35,7 @@ const a = (props: { href?: string; children?: ReactNode }) =>
 	)
 
 async function Code({ codeblock }: { codeblock: RawCode }) {
-	const highlighted = await highlight(codeblock, 'github-dark')
+	const highlighted = await highlight(codeblock, 'github-light')
 	return <Pre code={highlighted} />
 }
 
