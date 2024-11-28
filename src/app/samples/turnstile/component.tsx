@@ -16,7 +16,7 @@ export function Turnstile() {
 	const canPush =
 		turnstileMachine.reducer(state, 'push') !== state
 	return (
-		<Flex direction="column" gap="6">
+		<Flex direction="column" gap="6" width="45vh">
 			<Flex direction="column" gap="1">
 				<Button disabled={!canPay} onClick={pay}>
 					Pay

@@ -7,16 +7,12 @@ export type Event =
 	| { type: 'success'; amount: number }
 	| { type: 'error' }
 	| { type: 'push' }
-export type Message =
-	| { type: 'success'; amount: number }
-	| { type: 'error' }
 
 export const turnstileMachine = {
 	initial: { type: 'locked' } as State,
 	reducer: (
 		state: State,
 		event: Event,
-		emit: (message: Message) => void,
 	): State => {
 		switch (state.type) {
 			case 'locked':
@@ -33,10 +29,8 @@ export const turnstileMachine = {
 			case 'payment':
 				switch (event.type) {
 					case 'success':
-						emit({ type: 'success', amount: event.amount })
 						return { type: 'unlocked' }
 					case 'error':
-						emit({ type: 'error' })
 						return { type: 'locked' }
 					default:
 						return state

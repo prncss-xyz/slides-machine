@@ -45,13 +45,13 @@ export function Timer() {
 		useTimer(now)
 	const label = labels[next]
 	return (
-		<Flex direction="column" gap="6">
-			<Flex direction="column" gap="1" width="55px">
+		<Flex direction="column" gap="6" width="45vh">
+			<Flex direction="column" gap="1">
 				<Box>{count}</Box>
 				<Button onClick={toggle}>{label}</Button>
 				<Button onClick={reset}>reset</Button>
 			</Flex>
-			<Box width="320px">
+			<Box>
 				<Json value={state} />
 			</Box>
 		</Flex>

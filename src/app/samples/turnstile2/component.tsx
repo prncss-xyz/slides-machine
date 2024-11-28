@@ -1,43 +1,14 @@
 'use client'
 import { Flex, Button } from '@radix-ui/themes'
-import { useEffect, useMemo, useState } from 'react'
-import { Message, turnstileMachine } from './machine'
+import { useEffect, useMemo, useReducer } from 'react'
+import { turnstileMachine } from './machine'
 import { Json } from '@/components/json'
-import toast from 'react-hot-toast'
 import { localCached } from '@/utils/localCached'
 
-function useMachine<State, Event, Message>(
-	{
-		initial,
-		reducer,
-	}: {
-		initial: State
-		reducer: (
-			state: State,
-			event: Event,
-			emit: (message: Message) => void,
-		) => State
-	},
-	emit: (message: Message) => void,
-) {
-	const [state, setState] = useState(initial)
-	return {
-		state,
-		send: (event: Event) => {
-			const nextState = reducer(state, event, emit)
-			return setState(nextState)
-		},
-		next: (event: Event) => {
-			const nextState = reducer(state, event, () => {})
-			return nextState
-		},
-	}
-}
-
 function useTurnstile() {
-	const { state, send, next } = useMachine(
-		turnstileMachine,
-		listener,
+	const [state, send] = useReducer(
+		turnstileMachine.reducer,
+		turnstileMachine.initial,
 	)
 	const paymentHandler = useMemo(
 		() => localCached('now', payment, send),
@@ -52,9 +23,15 @@ function useTurnstile() {
 		pay: () =>
 			send({ type: 'pay', id: '123', now: Date.now() }),
 		canPay:
-			next({ type: 'pay', id: '123', now: 0 }) !== state,
+			turnstileMachine.reducer(state, {
+				type: 'pay',
+				id: '123',
+				now: 0,
+			}) !== state,
 		push: () => send({ type: 'push' }),
-		canPush: next({ type: 'push' }) !== state,
+		canPush:
+			turnstileMachine.reducer(state, { type: 'push' }) !==
+			state,
 		state,
 	}
 }
@@ -62,7 +39,7 @@ function useTurnstile() {
 export function Turnstile2() {
 	const turnstile = useTurnstile()
 	return (
-		<Flex direction="column" gap="1">
+		<Flex direction="column" gap="1" width="45vh">
 			<Button
 				disabled={!turnstile.canPay}
 				onClick={turnstile.pay}
@@ -78,19 +55,6 @@ export function Turnstile2() {
 			<Json value={turnstile.state} />
 		</Flex>
 	)
-}
-
-function listener(message: Message) {
-	switch (message.type) {
-		case 'error':
-			toast.error('Payment refused')
-			return
-		case 'success':
-			toast.success(
-				`Payment accepted, you still have ${message.amount} tickets`,
-			)
-			return
-	}
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

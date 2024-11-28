@@ -4,14 +4,24 @@ import { Flex, Box, Card } from '@radix-ui/themes'
 import { Timer } from './samples/timer/component.tsx'
 import { Turnstile } from './samples/turnstile/component.tsx'
 import { Turnstile2 } from './samples/turnstile2/component.tsx'
-import { Feedback } from '@/components/feedback'
-
+import { Turnstile3 } from './samples/turnstile3/component.tsx'
 
 # State Machines:
 
 ## Sometimes a Library, Always a Pattern
 
 _by Juliette Lamarche_
+
+---
+
+## Scopes
+
+<Box maxWidth="30em">
+I will start by making a distinction between state management and state manipulation. By state manipulation, I mean the business logic side of things,
+the pure functions which maps one state to another. By state management, I mean the physical implementation of that state, including concerns such a storage and
+reactivity. I will mostly focus on the state management side of things. Although examples will be with in React, the main concepts also apply on the backend, on the frond-end
+outside the component tree, or with (almost) any frond-end framework or state management library.
+</Box>
 
 ---
 
@@ -186,9 +196,7 @@ function Loader() {
     ![turnstile gate](./turnstile.jpg)
   </Box>
 	<Card>
-    <Box width="15vh">
-      <Turnstile />
-    </Box>
+    <Turnstile />
   </Card>
 </Flex>
 
@@ -209,6 +217,7 @@ function Loader() {
     <Box>
     - state then event
       - cohesion (should not accept a payment when you can push the gate)
+      - a tool for dealing with human complexity (vs mathematical complexity)
     - no default case (state), default case (event)
     - agnostic to physical store (pure function)
     </Box>
@@ -234,14 +243,12 @@ function Loader() {
 	</Box>
   <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box width="15vh">
-        <Turnstile />
-      </Box>
+      <Turnstile />
     </Card>
     <Box>
       - reducer
       - canPay
-        - zero knowledge about the state machine
+        - zero knowledge of the transition graph
     </Box>
   </Flex>
 </Flex>
@@ -260,9 +267,7 @@ function Loader() {
 	</Box>
   <Flex gap="6" direction="column" justify="center" align="center">
     <Card>
-      <Box width="15vh">
-        <Turnstile />
-      </Box>
+      <Turnstile />
     </Card>
   </Flex>
 </Flex>
@@ -286,9 +291,7 @@ function Loader() {
 ### Timer
 
 <Card>
-  <Box>
-    <Timer />
-  </Box>
+  <Timer />
 </Card>
 
 ---
@@ -311,6 +314,7 @@ function Loader() {
       - `elapsed` and `since` have same type but different semantics
       - pass `now` to have a pure function
         - testable
+      - `reset` is a self-transition
     </Box>
 	</Flex>
 	<Box maxHeight="80vh" overflow="scroll">
@@ -352,14 +356,12 @@ function Loader() {
     !from ./samples/timer/component.tsx 8:23
     ```
 	</Flex>
-  <Flex gap="6" direction="column">
+  <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box>
-        <Timer />
-      </Box>
+      <Timer />
     </Card>
     <Box>
-      - `next` has zero knowledge about the state machine
+      - `next` has zero of the transition graph
       - state management could improve rerendering
     </Box>
   </Flex>
@@ -377,19 +379,67 @@ function Loader() {
     !from ./samples/timer/component.tsx 37:63
     ```
 	</Box>
-  <Flex gap="6" direction="column">
+  <Flex gap="6" direction="column" align="start">
     <Card>
       <Timer />
     </Card>
     <Box>
-      - label, i18n
+      - label
     </Box>
   </Flex>
 </Flex>
 
 ---
 
-## Effects and Messages
+## Effects
+
+### Turnstile Gate
+
+<Flex gap="6" justify="between" align="center">
+	<Flex gap="6" direction="column" align="center">
+		```mermaid
+    stateDiagram-v2
+      [*] --> locked 
+      locked --> payment: pay 
+      payment --> unlocked: success
+      payment --> locked: error
+      unlocked --> locked: push 
+    ```
+	</Flex>
+	<Box maxHeight="80vh" overflow="scroll">
+    ```typescript
+    !from ./samples/turnstile2/machine.ts
+    ```
+  </Box>
+</Flex>
+
+---
+
+## Effects
+
+### Turnstile Gate
+
+<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
+	<Box maxHeight="80vh" overflow="scroll" flexShrink="1" maxWidth="70%">
+    ```tsx 
+    !from ./samples/turnstile2/component.tsx 8:37
+    ```
+	</Box>
+  <Flex gap="6" direction="column" align="start" minWidth="22vh">
+    <Card>
+      <Turnstile2 />
+    </Card>
+    <Box>
+      - waiting state
+      - effect 
+        - handler has access to `send`
+    </Box>
+  </Flex>
+</Flex>
+
+---
+
+## Messages
 
 ### Turnstile Gate
 
@@ -397,12 +447,14 @@ function Loader() {
 	<Flex gap="9" direction="row" align="center">
 		```mermaid
     stateDiagram-v2
+      classDef junk fill:pink
+
       [*] --> locked 
       locked --> payment: pay 
       payment --> success: success
-      success --> unlocked: next
+      success:::junk --> unlocked: next
       payment --> error: error
-      error --> locked: next
+      error:::junk --> locked: next
       unlocked --> locked: push 
     ```
 		```mermaid
@@ -425,35 +477,33 @@ function Loader() {
 
 ---
 
-## Effects and Messages
+## Messages
 
 ### Turnstile Gate
 
 <Flex gap="6" justify="between" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```typescript
-    !from ./samples/turnstile2/machine.ts
+    !from ./samples/turnstile3/machine.ts
     ```
   </Box>
 </Flex>
 
 ---
 
-## Effects and Messages
+## Messages
 
 ### Turnstile Gate
 
 <Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```tsx 
-    !from ./samples/turnstile2/component.tsx 9:35
+    !from ./samples/turnstile3/component.tsx 9:35
     ```
 	</Box>
   <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box>
-        <Turnstile2 />
-      </Box>
+      <Turnstile3 />
     </Card>
     <Box>
       - `useMachine`: 
@@ -465,21 +515,19 @@ function Loader() {
 
 ---
 
-## Effects and Messages
+## Messages
 
 ### Turnstile Gate
 
 <Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```tsx 
-    !from ./samples/turnstile2/component.tsx 37:60
+    !from ./samples/turnstile3/component.tsx 37:60
     ```
 	</Box>
   <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box>
-        <Turnstile2 />
-      </Box>
+      <Turnstile3 />
     </Card>
     <Box>
       - implementing effects
@@ -489,48 +537,22 @@ function Loader() {
 
 ---
 
-## Effects and Messages
+## Messages
 
 ### Turnstile Gate
 
 <Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```tsx 
-    !from ./samples/turnstile2/component.tsx 83:114
+    !from ./samples/turnstile3/component.tsx 83:114
     ```
 	</Box>
   <Flex gap="6" direction="column" align="start">
     <Card>
-      <Box>
-        <Turnstile2 />
-      </Box>
+      <Turnstile3 />
     </Card>
     <Box>
       - implementing messages
-    </Box>
-  </Flex>
-</Flex>
-
----
-
-## Effects and Messages
-
-### Turnstile Gate
-
-<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
-	<Box maxHeight="80vh" overflow="scroll">
-    ```tsx 
-    !from ./samples/turnstile2/component.tsx 62:81
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start">
-    <Card>
-      <Box>
-        <Turnstile2 />
-      </Box>
-    </Card>
-    <Box>
-      - component 
     </Box>
   </Flex>
 </Flex>
@@ -556,13 +578,13 @@ function Loader() {
 - use many machines in one framework
 - connecting
   - have effects or messages connect to another state machine
-  - xState, actor model
+  - xState (actor model), useReducer
 - composing, statecharts
   - composition is a operation that takes simple machines to create a more complex one
   - "Harel, D. (1987). A Visual Formalism for Complex Systems. Science of Computer Programming, 231–274".
   - was intended to be the entry point of an application
   - visual programmation
-  - xState
+  - xState, redux, useContext + useReducer
   - types of composition
     - product (similar to Redux' slice pattern)
     - hierarchical
@@ -684,6 +706,26 @@ function Loader() {
 
 ---
 
+## Some smells
+
+<Flex gap="3" direction="row">
+  <Box>
+  - you can freely transition from any state to any other state (the transition graph is saturated)
+    - use a simple state you can update by value
+  - your machine mixes different concerns or abstraction levels
+    - use multiple machines (connect or compose)
+  - your machine has junk states that do not convey useful information
+    - use messages
+  - some combination of states should never happen in your application
+    - merge different states (machines or values) into a single machine
+  </Box>
+  ![smell](./smell.webp)
+  
+</Flex>
+
+---
+
+
 ## Juliette Lamarche
 
 ### Let's connect
@@ -694,10 +736,6 @@ function Loader() {
       <QR name="linkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
       LinkedIn
     </Flex>
-    <Flex direction="column" gap="1" align="center">
-      <Feedback />
-      Feedback
-    </Flex>
   </Flex>
   <Box>
     **about me**
@@ -707,6 +745,5 @@ function Loader() {
     - freelance + working on [Constellar](https://prncss-xyz.github.io/constellar/)
     - looking for a permanent position
     - grateful for a review
-    - will be speaking at [/dev/mtl](https://www.dev-mtl.ca/)
   </Box>
 </Flex>
