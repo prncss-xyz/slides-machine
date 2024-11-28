@@ -62,7 +62,7 @@ function useTurnstile() {
 export function Turnstile3() {
 	const turnstile = useTurnstile()
 	return (
-		<Flex direction="column" gap="1" width="20vh">
+		<Flex direction="column" gap="1" width="45vh">
 			<Button
 				disabled={!turnstile.canPay}
 				onClick={turnstile.pay}
