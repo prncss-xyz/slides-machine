@@ -5,16 +5,16 @@ import qrcode from 'qrcode'
 export async function QR({ name, href }: { name: string; href: string }) {
 	const src = await qrcode.toDataURL(href)
 	return (
-		<Box py="3" width='50vh' height='50vh'>
+		<Box py="3" width="50vh" height="50vh">
 			<a href={href} target="_blank">
 				<img
 					src={src}
 					alt={name}
 					style={{
-            objectFit: 'cover',
-            width: '50vh',
-            height: '50vh',
-          }}
+						objectFit: 'cover',
+						width: '50vh',
+						height: '50vh',
+					}}
 				/>
 			</a>
 		</Box>

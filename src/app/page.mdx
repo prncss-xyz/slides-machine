@@ -16,12 +16,10 @@ _by Juliette Lamarche_
 
 ## Scopes
 
-<Box maxWidth="30em">
 I will start by making a distinction between state management and state manipulation. By state manipulation, I mean the business logic side of things,
 the pure functions which maps one state to another. By state management, I mean the physical implementation of that state, including concerns such a storage and
 reactivity. I will mostly focus on the state management side of things. Although examples will be with in React, the main concepts also apply on the backend, on the frond-end
 outside the component tree, or with (almost) any frond-end framework or state management library.
-</Box>
 
 ---
 
@@ -507,7 +505,7 @@ function Loader() {
     </Card>
     <Box>
       - `useMachine`: 
-        - `useReaducer` won't allow side effects
+        - `useReducer` won't allow side effects
         - messages implementation is injected
     </Box>
   </Flex>
@@ -522,7 +520,7 @@ function Loader() {
 <Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```tsx 
-    !from ./samples/turnstile3/component.tsx 37:60
+    !from ./samples/turnstile3/component.tsx 83:96
     ```
 	</Box>
   <Flex gap="6" direction="column" align="start">
@@ -530,7 +528,7 @@ function Loader() {
       <Turnstile3 />
     </Card>
     <Box>
-      - implementing effects
+      - implementing messages
     </Box>
   </Flex>
 </Flex>
@@ -544,7 +542,7 @@ function Loader() {
 <Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
 	<Box maxHeight="80vh" overflow="scroll">
     ```tsx 
-    !from ./samples/turnstile3/component.tsx 83:114
+    !from ./samples/turnstile3/component.tsx 37:60
     ```
 	</Box>
   <Flex gap="6" direction="column" align="start">
@@ -605,7 +603,7 @@ function Loader() {
     - merging decentralized updates
 - unreachable states
   - `plusTwo`
-  - design smell (make illegal states irrepresentable)
+  - code smell (make illegal states irrepresentable)
 
 ---
 
@@ -711,13 +709,15 @@ function Loader() {
 <Flex gap="3" direction="row">
   <Box>
   - you can freely transition from any state to any other state (the transition graph is saturated)
-    - use a simple state you can update by value
+    - use a simple state, update by value
   - your machine mixes different concerns or abstraction levels
     - use multiple machines (connect or compose)
   - your machine has junk states that do not convey useful information
     - use messages
   - some combination of states should never happen in your application
     - merge different states (machines or values) into a single machine
+  - some succession of states should never happen
+    - use a state machine
   </Box>
   ![smell](./smell.webp)
 </Flex>

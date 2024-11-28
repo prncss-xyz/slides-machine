@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { Flex, Button } from '@radix-ui/themes'
 import { useEffect, useMemo, useState } from 'react'
 import { Message, turnstileMachine } from './machine'
@@ -87,14 +87,15 @@ function listener(message: Message) {
 			return
 		case 'success':
 			toast.success(
-				`Payment accepted, you still have ${message.amount} tickets`,
+				'Payment accepted, you still have ' +
+					message.amount +
+					'tickets',
 			)
 			return
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function payment(_: {
+function payment({}: {
 	id: string
 	now: number
 }): Promise<

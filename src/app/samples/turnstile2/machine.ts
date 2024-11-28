@@ -10,10 +10,7 @@ export type Event =
 
 export const turnstileMachine = {
 	initial: { type: 'locked' } as State,
-	reducer: (
-		state: State,
-		event: Event,
-	): State => {
+	reducer: (state: State, event: Event): State => {
 		switch (state.type) {
 			case 'locked':
 				switch (event.type) {

@@ -30,12 +30,14 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
-					<Theme>
-						<KeyNav>
-							<Box px="9" py="">{children}</Box>
-							<Toaster />
-						</KeyNav>
-					</Theme>
+				<Theme>
+					<KeyNav>
+						<Box px="9" py="">
+							{children}
+						</Box>
+						<Toaster />
+					</KeyNav>
+				</Theme>
 			</body>
 		</html>
 	)

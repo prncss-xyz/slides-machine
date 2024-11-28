@@ -2,7 +2,7 @@ import type { MDXComponents } from 'mdx/types'
 import { Pre, RawCode, highlight } from 'codehike/code'
 import { ReactNode } from 'react'
 import NextLink from 'next/link'
-import { Heading, Link, Text } from '@radix-ui/themes'
+import { Box, Heading, Link, Text } from '@radix-ui/themes'
 import { Slide } from './slides/slides'
 import { Img } from './components/next/img'
 
@@ -24,7 +24,22 @@ const h5 = (props: { children?: ReactNode }) => (
 const h6 = (props: { children?: ReactNode }) => (
 	<Heading weight="bold" size="4" mb="4" as="h6" {...props} />
 )
-const p = (props: { children?: ReactNode }) => <Text as="p" my="4" {...props} />
+const p = (props: { children?: ReactNode }) => (
+	<Text as="p" my="4" {...props} style={{ maxWidth: '30em' }} />
+)
+
+const ol = (props: { children?: ReactNode }) => (
+	<Box maxWidth="30em">
+		<ol>{props.children}</ol>
+	</Box>
+)
+
+const ul = (props: { children?: ReactNode }) => (
+	<Box maxWidth="30em">
+		<ul>{props.children}</ul>
+	</Box>
+)
+
 const a = (props: { href?: string; children?: ReactNode }) =>
 	props.href?.startsWith('/') || props.href?.startsWith('.') ? (
 		<Link asChild>
@@ -50,6 +65,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		h5,
 		h6,
 		p,
+		ul,
+		ol,
 		a,
 		img: (props) => (
 			// eslint-disable-next-line jsx-a11y/alt-text
