@@ -51,7 +51,11 @@ const a = (props: { href?: string; children?: ReactNode }) =>
 
 async function Code({ codeblock }: { codeblock: RawCode }) {
 	const highlighted = await highlight(codeblock, 'github-light')
-	return <Pre code={highlighted} />
+	return (
+		<Box maxHeight="80vh" overflow="scroll">
+			<Pre code={highlighted} />
+		</Box>
+	)
 }
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {

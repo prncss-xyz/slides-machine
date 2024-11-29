@@ -1,6 +1,9 @@
 import { Good, Bad } from '@/components/icons/check'
 import { QR } from '@/components/qr'
 import { Flex, Box, Card } from '@radix-ui/themes'
+import { Row } from '@/components/layout/row'
+import { Row2 } from '@/components/layout/row2'
+import { Col } from '@/components/layout/col'
 import { Timer } from './samples/timer/component.tsx'
 import { Turnstile } from './samples/turnstile/component.tsx'
 import { Turnstile2 } from './samples/turnstile2/component.tsx'
@@ -35,7 +38,7 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 
 ### Update by Values
 
-<Flex gap="6" align="center">
+<Row>
   <Box>
     - useState 
     - free transitions, let consumers do whatever they want
@@ -47,7 +50,7 @@ outside the component tree, or with (almost) any frond-end framework or state ma
   <Box maxWidth="50vh" maxHeight="50vh" overflow="hidden">
     ![filter](./filter.png)
   </Box>
-</Flex>
+</Row>
 
 ---
 
@@ -65,7 +68,7 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 
 ### Update by Events
 
-<Flex gap="6" align="center">
+<Row>
 	<Box>
 		- useReducer, Redux (actions)
     - asymmetry between reads and writes (different types)
@@ -83,7 +86,7 @@ outside the component tree, or with (almost) any frond-end framework or state ma
       red --> green: next 
     ```
 	</Box>
-</Flex>
+</Row>
 
 ---
 
@@ -112,14 +115,13 @@ function Loader() {
   // ...
 }
 ```
-
-<Flex gap="6" align="center">
+<Row>
   |             | _loading_ |          |
   | ----------- | :-------: | :------: |
   | **_error_** | *true*    | *false*  |
   | *false*     | <Good />  | <Good /> |
   | *true*      | <Bad />   | <Good /> |
-  <Flex gap="4" >
+  <Row2>
     <Box>
       **loading**
       ```mermaid
@@ -136,8 +138,8 @@ function Loader() {
         false --> true
       ```
     </Box>
-  </Flex>
-</Flex>
+  </Row2>
+</Row>
 
 ---
 
@@ -145,8 +147,8 @@ function Loader() {
 
 ### Loader
 
-<Flex gap="6" justify="between" align="center">
-  <Flex gap="6" direction="column" align="center">
+<Row>
+  <Col>
     ```mermaid
     stateDiagram-v2
       [*] --> loading
@@ -161,13 +163,11 @@ function Loader() {
       - express the succession of events
       - no business logic in the handlers
     </Box>
-  </Flex>
-  <Box maxHeight="80vh" overflow="scroll">
+  </Col>
     ```typescript
     !from ./samples/loader/machine2.ts
     ```
-  </Box>
-</Flex>
+</Row>
 
 ---
 
@@ -189,14 +189,14 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center">
+<Row>
   <Box maxWidth="40vh" maxHeight="40vh">
     ![turnstile gate](./turnstile.jpg)
   </Box>
 	<Card>
     <Turnstile />
   </Card>
-</Flex>
+</Row>
 
 ---
 
@@ -204,8 +204,13 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" justify="between" align="center">
-	<Flex gap="6" direction="column" align="center">
+<Row>
+  <Col>
+  ```typescript
+  !from ./samples/turnstile/machine.ts
+  ```
+  </Col>
+	<Col>
 		```mermaid
     stateDiagram-v2
       [*] --> locked 
@@ -219,13 +224,8 @@ function Loader() {
     - no default case (state), default case (event)
     - agnostic to physical store (pure function)
     </Box>
-	</Flex>
-	<Box maxHeight="80vh" width="100%" overflow="scroll">
-```typescript
-!from ./samples/turnstile/machine.ts
-```
-  </Box>
-</Flex>
+	</Col>
+</Row>
 
 ---
 
@@ -233,13 +233,11 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center">
-	<Box maxWidth="80vw" maxHeight="80vh" overflow="scroll">
-    ```tsx 
-    !from ./samples/turnstile/component2.tsx 7:21
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start">
+<Row>
+  ```tsx 
+  !from ./samples/turnstile/component2.tsx 7:21
+  ```
+  <Col>
     <Card>
       <Turnstile />
     </Card>
@@ -248,8 +246,8 @@ function Loader() {
       - canPay
         - zero knowledge of the transition graph
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -257,18 +255,16 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center">
-	<Box maxWidth="80vw" maxHeight="80vh" overflow="scroll">
-    ```tsx 
-    !from ./samples/turnstile/component2.tsx 23:42
-    ```
-	</Box>
-  <Flex gap="6" direction="column" justify="center" align="center">
+<Row>
+  ```tsx 
+  !from ./samples/turnstile/component2.tsx 23:42
+  ```
+  <Col>
     <Card>
       <Turnstile />
     </Card>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -298,8 +294,8 @@ function Loader() {
 
 ### Timer
 
-<Flex gap="6" justify="between" align="center">
-	<Flex gap="6" direction="column" align="center">
+<Row>
+	<Col>
 		```mermaid
     stateDiagram-v2
       [*] --> stopped 
@@ -314,13 +310,11 @@ function Loader() {
         - testable
       - `reset` is a self-transition
     </Box>
-	</Flex>
-	<Box maxHeight="80vh" overflow="scroll">
-    ```typescript
-    !from ./samples/timer/machine.ts
-    ```
-  </Box>
-</Flex>
+	</Col>
+  ```typescript
+  !from ./samples/timer/machine.ts
+  ```
+</Row>
 
 ---
 
@@ -328,19 +322,17 @@ function Loader() {
 
 ### Timer
 
-<Flex gap="6" justify="between" align="center">
-	<Flex gap="6" direction="column" align="center">
+<Row>
+	<Col>
     <Box>
-      - function to compute the displayed time
+      - getter function to compute the displayed time
       - lacks cohesion (a library would solve this)
     </Box>
-	</Flex>
-	<Box maxHeight="80vh" overflow="scroll">
-    ```typescript
-    !from ./samples/timer/count.ts
-    ```
-  </Box>
-</Flex>
+	</Col>
+  ```typescript
+  !from ./samples/timer/count.ts
+  ```
+</Row>
 
 ---
 
@@ -348,13 +340,13 @@ function Loader() {
 
 ### Timer
 
-<Flex gap="6" justify="between" align="center">
-	<Flex gap="6" direction="column" align="center">
+<Row>
+	<Col>
     ```tsx
     !from ./samples/timer/component.tsx 8:23
     ```
-	</Flex>
-  <Flex gap="6" direction="column" align="start">
+	</Col>
+  <Col>
     <Card>
       <Timer />
     </Card>
@@ -362,8 +354,8 @@ function Loader() {
       - `next` has zero of the transition graph
       - state management could improve rerendering
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -371,21 +363,19 @@ function Loader() {
 
 ### Timer
 
-<Flex gap="6" justify="between" align="center">
-	<Box maxHeight="80vh" overflow="scroll">
-    ```tsx
-    !from ./samples/timer/component.tsx 37:63
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start">
+<Row>
+  ```tsx
+  !from ./samples/timer/component.tsx 37:63
+  ```
+  <Col>
     <Card>
       <Timer />
     </Card>
     <Box>
       - label
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -393,8 +383,8 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" justify="between" align="center">
-	<Flex gap="6" direction="column" align="center">
+<Row>
+	<Col>
 		```mermaid
     stateDiagram-v2
       [*] --> locked 
@@ -403,13 +393,11 @@ function Loader() {
       payment --> locked: error
       unlocked --> locked: push 
     ```
-	</Flex>
-	<Box maxHeight="80vh" overflow="scroll">
-    ```typescript
-    !from ./samples/turnstile2/machine.ts
-    ```
-  </Box>
-</Flex>
+	</Col>
+  ```typescript
+  !from ./samples/turnstile2/machine.ts
+  ```
+</Row>
 
 ---
 
@@ -417,13 +405,11 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
-	<Box maxHeight="80vh" overflow="scroll" flexShrink="1" maxWidth="70%">
-    ```tsx 
-    !from ./samples/turnstile2/component.tsx 8:37
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start" minWidth="22vh">
+<Row>
+  ```tsx 
+  !from ./samples/turnstile2/component.tsx 8:37
+  ```
+  <Col>
     <Card>
       <Turnstile2 />
     </Card>
@@ -432,8 +418,8 @@ function Loader() {
       - effect 
         - handler has access to `send`
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -441,8 +427,8 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" direction="column" justify="between" align="center">
-	<Flex gap="9" direction="row" align="center">
+<Col>
+	<Row>
 		```mermaid
     stateDiagram-v2
       classDef junk fill:pink
@@ -463,7 +449,7 @@ function Loader() {
       payment --> locked: error
       unlocked --> locked: push 
     ```
-	</Flex>
+	</Row>
   <Box>
     - effects (`success` and `error` events)
       - two-way communication
@@ -471,7 +457,7 @@ function Loader() {
       - one way communication
       - avoid junk states
   </Box>
-</Flex>
+</Col>
 
 ---
 
@@ -479,13 +465,9 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" justify="between" align="center" maxHeight="80vh" overflow="hidden">
-	<Box maxHeight="80vh" overflow="scroll">
-    ```typescript
-    !from ./samples/turnstile3/machine.ts
-    ```
-  </Box>
-</Flex>
+```typescript
+!from ./samples/turnstile3/machine.ts
+```
 
 ---
 
@@ -493,13 +475,11 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
-	<Box maxHeight="80vh" overflow="scroll">
-    ```tsx 
-    !from ./samples/turnstile3/component.tsx 9:35
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start">
+<Row>
+  ```tsx 
+  !from ./samples/turnstile3/component.tsx 9:35
+  ```
+  <Col>
     <Card>
       <Turnstile3 />
     </Card>
@@ -508,8 +488,8 @@ function Loader() {
         - `useReducer` won't allow side effects
         - messages implementation is injected
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -517,21 +497,19 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
-	<Box maxHeight="80vh" overflow="scroll">
-    ```tsx 
-    !from ./samples/turnstile3/component.tsx 83:96
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start">
+<Row>
+  ```tsx 
+  !from ./samples/turnstile3/component.tsx 83:96
+  ```
+  <Col>
     <Card>
       <Turnstile3 />
     </Card>
     <Box>
       - implementing messages
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -539,21 +517,19 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex gap="6" align="center" maxHeight="80vh" overflow="hidden">
-	<Box maxHeight="80vh" overflow="scroll">
-    ```tsx 
-    !from ./samples/turnstile3/component.tsx 37:60
-    ```
-	</Box>
-  <Flex gap="6" direction="column" align="start">
+<Row>
+  ```tsx 
+  !from ./samples/turnstile3/component.tsx 37:60
+  ```
+  <Col>
     <Card>
       <Turnstile3 />
     </Card>
     <Box>
       - implementing messages
     </Box>
-  </Flex>
-</Flex>
+  </Col>
+</Row>
 
 ---
 
@@ -626,16 +602,13 @@ function Loader() {
 
 ## Pattern
 
-<Flex 
-  gap="6" 
-  direction="column" 
->
+<Row>
   <Box>
   - no learning curve
   - fewer dependencies
   - less descriptive
   </Box>
-</Flex>
+</Row>
 
 ---
 
@@ -643,12 +616,8 @@ function Loader() {
 
 ## xState
 
-<Flex 
-  gap="6" 
-  direction="column" 
->
+<Row>
   <Box>
-  - [XState](https://xstate.js.org/)
   - industry standard
   - very good devtools (visual)
   - tools for testing (solved a problem they created by not being pure enough)
@@ -656,7 +625,8 @@ function Loader() {
   - context
   - reactive system is redundant with front-end framework
   </Box>
-</Flex>
+  <QR name="XState" href="https://xstate.js.org/" />
+</Row>
 
 ---
 
@@ -664,17 +634,14 @@ function Loader() {
 
 ## Robot
 
-<Flex 
-  gap="6" 
-  direction="column" 
->
+<Row>
   <Box>
-  - [Robot](https://thisrobot.life/)
   - lightweight (1kb)
   - context
   - reactive system is redundant with front-end framework
   </Box>
-</Flex>
+  <QR name="Robot" href="https://thisrobot.life/" />
+</Row>
 
 ---
 
@@ -682,12 +649,8 @@ function Loader() {
 
 ## Constellar
 
-<Flex 
-  gap="6" 
-  direction="row" 
->
+<Row>
   <Box>
-  - [Constellar](https://prncss-xyz.github.io/constellar/)
   - personal project
   - not production ready
   - clear separation of concerns
@@ -697,16 +660,14 @@ function Loader() {
   - would love your feedback and your stars (but mostly you feedback)
   - maybe we can make it production ready together!
   </Box>
-  <Flex direction="column" gap="1" align="center">
-    <QR name="constellar" href="https://prncss-xyz.github.io/constellar/" />
-  </Flex>
-</Flex>
+  <QR name="Constellar" href="https://prncss-xyz.github.io/constellar/" />
+</Row>
 
 ---
 
 ## Some smells
 
-<Flex gap="3" direction="row">
+<Row>
   <Box>
   - you can freely transition from any state to any other state (the transition graph is saturated)
     - use a simple state, update by value
@@ -718,9 +679,10 @@ function Loader() {
     - merge different states (machines or values) into a single machine
   - some succession of states should never happen
     - use a state machine
+  - Happy Smelling!
   </Box>
   ![smell](./smell.webp)
-</Flex>
+</Row>
 
 ---
 
@@ -729,13 +691,8 @@ function Loader() {
 
 ### Let's connect
 
-<Flex gap="6" align="center" >
-  <Flex gap="6" align="end" >
-    <Flex direction="column" gap="1" align="center">
-      <QR name="linkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
-      LinkedIn
-    </Flex>
-  </Flex>
+<Row>
+  <QR name="LinkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
   <Box>
     **about me**
     - full stack developer
@@ -745,4 +702,4 @@ function Loader() {
     - looking for a permanent position
     - grateful for a review
   </Box>
-</Flex>
+</Row>
