@@ -1,0 +1,11 @@
+.two-cols th {
+	width: 40vw;
+}
+
+.two-cols td {
+	padding: 1rem 1rem;
+}
+
+.two-cols tbody tr:nth-child(odd) {
+	background-color: var(--gray-4);
+}

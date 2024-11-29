@@ -32,7 +32,7 @@ export default function RootLayout({
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
 				<Theme>
 					<KeyNav>
-						<Box px="9" py="">
+						<Box px="9" style={{ backgroundColor: 'var(--gray-2)' }}>
 							{children}
 						</Box>
 						<Toaster />

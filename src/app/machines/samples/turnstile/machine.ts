@@ -2,7 +2,6 @@ type State = 'locked' | 'unlocked'
 type Event = 'pay' | 'push'
 
 export const turnstileMachine = {
-	// typing is important here
 	initial: 'locked' as State,
 	reducer: function (state: State, event: Event): State {
 		switch (state) {

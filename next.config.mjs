@@ -6,6 +6,7 @@ import rehypeMdxImportMedia from 'rehype-mdx-import-media'
 import rehypeSlides from './rehype-slides.mjs'
 import rehypeMermaid from 'rehype-mermaid'
 import createMDX from '@next/mdx'
+import emoji from 'remark-emoji'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -38,7 +39,7 @@ const chConfig = {
 const withMDX = createMDX({
 	extension: /\.mdx?$/,
 	options: {
-		remarkPlugins: [[remarkCodeHike, chConfig], remarkGfm],
+		remarkPlugins: [[remarkCodeHike, chConfig], remarkGfm, emoji],
 		rehypePlugins: [
 			rehypeSlides,
 			rehypeMermaid,

@@ -1,7 +1,11 @@
 # TODO
 
-- pass props to Row, Col, Row2
-- border or background for code samples
+- ? pass props to Row, Col, Row2
+
+- more responsive layout components
 - codehike: highlight focused code
-- sync state across tabs
-- emojis
+
+## Styling
+- better responsivity
+- use colorscheme palette
+- hide qr when small

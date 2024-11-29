@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
+import { AnnotationHandler, InnerLine } from 'codehike/code'
 import { Pre, RawCode, highlight } from 'codehike/code'
 import { ReactNode } from 'react'
 import NextLink from 'next/link'
@@ -49,11 +50,53 @@ const a = (props: { href?: string; children?: ReactNode }) =>
 		<Link target="_blank" {...props} />
 	)
 
+const mark: AnnotationHandler = {
+	name: 'mark',
+	Line: ({ annotation, ...props }) => {
+		const color = annotation?.query || 'rgb(14 165 233)'
+		return (
+			<div
+				style={{
+					display: 'flex',
+					borderLeft: 'solid 2px transparent',
+					borderLeftColor: annotation && color,
+					backgroundColor: annotation && `pink`,
+					padding: '0 0.5em',
+				}}
+			>
+				<InnerLine merge={props} />
+			</div>
+		)
+	},
+	Inline: ({ annotation, children }) => {
+		const color = annotation?.query || 'rgb(14 165 233)'
+		return (
+			<span
+				style={{
+					outline: `solid 1px rgb(from ${color} r g b / 0.5)`,
+					background: `rgb(from ${color} r g b / 0.13)`,
+					padding: '0 0.5em',
+					borderRadius: '0.25em',
+				}}
+			>
+				{children}
+			</span>
+		)
+	},
+}
 async function Code({ codeblock }: { codeblock: RawCode }) {
 	const highlighted = await highlight(codeblock, 'github-light')
 	return (
-		<Box maxHeight="80vh" overflow="scroll">
-			<Pre code={highlighted} />
+		<Box
+			maxHeight="80vh"
+			width="60vw"
+			overflow="scroll"
+			px="1"
+			style={{
+				backgroundColor: 'white',
+			}}
+		>
+			<Pre code={highlighted} handlers={[mark]} />
 		</Box>
 	)
 }

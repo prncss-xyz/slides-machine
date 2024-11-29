@@ -24,15 +24,9 @@ li li {
 
 .radix-themes {
 	--default-font-family: var(--font-geist-sans);
-	--default-font-size: 3vh;
+	--default-font-size: calc(max(24px, 3vh));
 }
 
 pre {
 	tab-size: 3rem;
-}
-
-td,
-tr {
-	padding-left: 1rem;
-	padding-right: 1rem;
 }

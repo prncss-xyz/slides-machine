@@ -16,6 +16,7 @@
 		"@radix-ui/themes": "^3.1.4",
 		"codehike": "^1.0.2",
 		"jotai": "^2.10.0",
+		"jotai-effect": "^1.0.4",
 		"next": "14.2.15",
 		"next-image-export-optimizer": "^1.15.1",
 		"next-themes": "^0.3.0",
@@ -27,6 +28,7 @@
 		"rehype-img-size": "^1.0.1",
 		"rehype-mdx-import-media": "^1.2.0",
 		"rehype-mermaid": "^3.0.0",
+		"remark-emoji": "^5.0.1",
 		"remark-gfm": "^4.0.0"
 	},
 	"devDependencies": {

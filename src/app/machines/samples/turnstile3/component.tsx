@@ -1,23 +1,17 @@
-"use client"
+'use client'
 import { Flex, Button } from '@radix-ui/themes'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Message, turnstileMachine } from './machine'
 import { Json } from '@/components/json'
 import toast from 'react-hot-toast'
-import { localCached } from '@/utils/localCached'
 
 function useMachine<State, Event, Message>(
-	{
-		initial,
-		reducer,
-	}: {
-		initial: State
-		reducer: (
-			state: State,
-			event: Event,
-			emit: (message: Message) => void,
-		) => State
-	},
+	initial: State,
+	reducer: (
+		state: State,
+		event: Event,
+		emit: (message: Message) => void,
+	) => State,
 	emit: (message: Message) => void,
 ) {
 	const [state, setState] = useState(initial)
@@ -36,18 +30,15 @@ function useMachine<State, Event, Message>(
 
 function useTurnstile() {
 	const { state, send, next } = useMachine(
-		turnstileMachine,
+		turnstileMachine.initial,
+		turnstileMachine.reducer,
 		listener,
-	)
-	const paymentHandler = useMemo(
-		() => localCached('now', payment, send),
-		[send],
 	)
 	useEffect(() => {
 		if (state.type === 'payment') {
-			return paymentHandler(state)
+			return payment(state, send)
 		}
-	}, [paymentHandler, state])
+	}, [send, state])
 	return {
 		pay: () =>
 			send({ type: 'pay', id: '123', now: Date.now() }),
@@ -62,7 +53,7 @@ function useTurnstile() {
 export function Turnstile3() {
 	const turnstile = useTurnstile()
 	return (
-		<Flex direction="column" gap="1" width="45vh">
+		<Flex direction="column" gap="1" width="27rem">
 			<Button
 				disabled={!turnstile.canPay}
 				onClick={turnstile.pay}
@@ -95,21 +86,26 @@ function listener(message: Message) {
 	}
 }
 
-function payment({}: {
-	id: string
-	now: number
-}): Promise<
-	{ amount: number; type: 'success' } | { type: 'error' }
-> {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			const r = Math.random()
-			if (r < 0.5) {
-				resolve({ type: 'error' })
-				return
-			}
-			const amount = Math.round(Math.random() * 10)
-			resolve({ amount, type: 'success' })
-		}, 1000)
-	})
+let lastPayment = 0
+function payment(
+	{
+		now,
+	}: {
+		id: string
+		now: number
+	},
+	send: (message: Message) => void,
+) {
+	if (lastPayment === now) return
+	lastPayment = now
+	const handel = setTimeout(() => {
+		const r = Math.random()
+		if (r < 0.5) {
+			send({ type: 'error' })
+			return
+		}
+		const amount = Math.round(Math.random() * 10)
+		send({ amount, type: 'success' })
+	}, 1000)
+	return () => clearTimeout(handel)
 }
