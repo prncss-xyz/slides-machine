@@ -1,54 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MDXComponents } from 'mdx/types'
 import { AnnotationHandler, InnerLine } from 'codehike/code'
 import { Pre, RawCode, highlight } from 'codehike/code'
 import { ReactNode } from 'react'
-import NextLink from 'next/link'
-import { Box, Heading, Link, Text } from '@radix-ui/themes'
+import { A } from './components/layout/a'
 import { Slide } from './slides/slides'
 import { Img } from './components/next/img'
+import { Ul } from './components/layout/ul'
+import { P } from './components/layout/p'
+import { Heading } from './components/layout/heading'
+import { css } from './generated/styled-system/css'
 
-const h1 = (props: { children?: ReactNode }) => (
-	<Heading weight="bold" size="9" mb="6" as="h1" {...props} />
-)
-const h2 = (props: { children?: ReactNode }) => (
-	<Heading weight="bold" size="8" mb="5" as="h2" {...props} />
-)
-const h3 = (props: { children?: ReactNode }) => (
-	<Heading weight="bold" size="7" mb="4" as="h3" {...props} />
-)
-const h4 = (props: { children?: ReactNode }) => (
-	<Heading weight="bold" size="6" mb="4" as="h4" {...props} />
-)
-const h5 = (props: { children?: ReactNode }) => (
-	<Heading weight="bold" size="5" mb="4" as="h5" {...props} />
-)
-const h6 = (props: { children?: ReactNode }) => (
-	<Heading weight="bold" size="4" mb="4" as="h6" {...props} />
-)
-const p = (props: { children?: ReactNode }) => (
-	<Text as="p" my="4" {...props} style={{ maxWidth: '30em' }} />
-)
-
-const ol = (props: { children?: ReactNode }) => (
-	<Box maxWidth="30em">
-		<ol>{props.children}</ol>
-	</Box>
-)
-
-const ul = (props: { children?: ReactNode }) => (
-	<Box maxWidth="30em">
-		<ul>{props.children}</ul>
-	</Box>
-)
-
-const a = (props: { href?: string; children?: ReactNode }) =>
-	props.href?.startsWith('/') || props.href?.startsWith('.') ? (
-		<Link asChild>
-			<NextLink {...(props as { href: string; children?: ReactNode })} />
-		</Link>
-	) : (
-		<Link target="_blank" {...props} />
-	)
+const H1 = (props: { children: ReactNode }) => <Heading level={1} {...props} />
+const H2 = (props: { children: ReactNode }) => <Heading level={2} {...props} />
+const H3 = (props: { children: ReactNode }) => <Heading level={3} {...props} />
+const H4 = (props: { children: ReactNode }) => <Heading level={4} {...props} />
+const H5 = (props: { children: ReactNode }) => <Heading level={5} {...props} />
+const H6 = (props: { children: ReactNode }) => <Heading level={6} {...props} />
 
 const mark: AnnotationHandler = {
 	name: 'mark',
@@ -56,13 +24,13 @@ const mark: AnnotationHandler = {
 		const color = annotation?.query || 'rgb(14 165 233)'
 		return (
 			<div
-				style={{
+				className={css({
 					display: 'flex',
 					borderLeft: 'solid 2px transparent',
 					borderLeftColor: annotation && color,
 					backgroundColor: annotation && `pink`,
 					padding: '0 0.5em',
-				}}
+				})}
 			>
 				<InnerLine merge={props} />
 			</div>
@@ -72,32 +40,32 @@ const mark: AnnotationHandler = {
 		const color = annotation?.query || 'rgb(14 165 233)'
 		return (
 			<span
-				style={{
+				className={css({
 					outline: `solid 1px rgb(from ${color} r g b / 0.5)`,
 					background: `rgb(from ${color} r g b / 0.13)`,
 					padding: '0 0.5em',
 					borderRadius: '0.25em',
-				}}
+				})}
 			>
 				{children}
 			</span>
 		)
 	},
 }
+
 async function Code({ codeblock }: { codeblock: RawCode }) {
 	const highlighted = await highlight(codeblock, 'github-light')
 	return (
-		<Box
-			maxHeight="80vh"
-			width="60vw"
-			overflow="scroll"
-			px="1"
-			style={{
+		<Pre
+			code={highlighted}
+			handlers={[mark]}
+			className={css({
+				fontFamily: 'mono',
+				maxHeight: '80vh',
+				overflow: 'scroll',
 				backgroundColor: 'white',
-			}}
-		>
-			<Pre code={highlighted} handlers={[mark]} />
-		</Box>
+			})}
+		/>
 	)
 }
 
@@ -105,21 +73,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
 		...components,
 		slide: Slide,
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6,
-		p,
-		ul,
-		ol,
-		a,
-		img: (props) => (
-			// eslint-disable-next-line jsx-a11y/alt-text
-			// @ts-expect-error src can be undefined
-			<Img unoptimized {...props} />
-		),
+		h1: H1,
+		h2: H2,
+		h3: H3,
+		h4: H4,
+		h5: H5,
+		h6: H6,
+		p: P,
+		ul: Ul,
+		a: A,
+		img: Img,
 		Code,
-	}
+	} as any
 }

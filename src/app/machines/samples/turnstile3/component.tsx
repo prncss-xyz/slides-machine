@@ -1,9 +1,10 @@
 'use client'
-import { Flex, Button } from '@radix-ui/themes'
 import { useEffect, useState } from 'react'
 import { Message, turnstileMachine } from './machine'
 import { Json } from '@/components/json'
 import toast from 'react-hot-toast'
+import { Box, Flex } from '@/generated/styled-system/jsx'
+import { Button } from '@/components/layout/button'
 
 function useMachine<State, Event, Message>(
 	initial: State,
@@ -53,20 +54,24 @@ function useTurnstile() {
 export function Turnstile3() {
 	const turnstile = useTurnstile()
 	return (
-		<Flex direction="column" gap="1" width="27rem">
-			<Button
-				disabled={!turnstile.canPay}
-				onClick={turnstile.pay}
-			>
-				Pay
-			</Button>
-			<Button
-				disabled={!turnstile.canPush}
-				onClick={turnstile.push}
-			>
-				Push
-			</Button>
-			<Json value={turnstile.state} />
+		<Flex direction="column" gap="6">
+			<Flex direction="column" gap="1">
+				<Button
+					disabled={!turnstile.canPay}
+					onClick={turnstile.pay}
+				>
+					Pay
+				</Button>
+				<Button
+					disabled={!turnstile.canPush}
+					onClick={turnstile.push}
+				>
+					Push
+				</Button>
+			</Flex>
+			<Box width="13em">
+				<Json value={turnstile.state} />
+			</Box>
 		</Flex>
 	)
 }

@@ -1,14 +1,15 @@
 import { Good, Bad } from '@/components/icons/check'
 import { QR } from '@/components/qr'
-import { Flex, Box, Card } from '@radix-ui/themes'
+import { Card } from '@/components/layout/card'
 import { Row } from '@/components/layout/row'
-import { Row2 } from '@/components/layout/row2'
 import { Col } from '@/components/layout/col'
-import { Timer } from './samples/timer/component.tsx'
-import { Turnstile } from './samples/turnstile/component.tsx'
-import { Turnstile2 } from './samples/turnstile2/component.tsx'
-import { Turnstile3 } from './samples/turnstile3/component.tsx'
-import { TwoCols } from '@/components/two-cols'
+import { Timer } from './samples/timer/component'
+import { Turnstile } from './samples/turnstile/component'
+import { Turnstile2 } from './samples/turnstile2/component'
+import { Turnstile3 } from './samples/turnstile3/component'
+import { TwoColsTbl } from '@/components/layout/two-cols-tbl'
+import { RowCode } from '@/components/layout/row-code'
+import { Box } from '@/generated/styled-system/jsx'
 
 # State Machines:
 
@@ -40,15 +41,15 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 ### Update by Values
 
 <Row>
-  <Box>
+  <div>
     - useState 
     - free transitions, let consumers do whatever they want
     - symmetry between getters and setters 
     - setter can be a value or an update function 
     - optics 
     - _e.g.:_ form-like, query object
-  </Box>
-  <Box width="50vh">
+  </div>
+  <Box width="40vh">
     ![filter](./filter.png)
   </Box>
 </Row>
@@ -59,9 +60,9 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 
 ### Update by Events
 
-<Box width="40vh">
+<div style={{ width: '40vh' }}>
 	![traffic lights](./lights.jpg)
-</Box>
+</div>
 
 ---
 
@@ -70,15 +71,15 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 ### Update by Events
 
 <Row>
-	<Box>
+	<div>
 		- useReducer, Redux (actions)
     - asymmetry between reads and writes (different types)
     - restricted set of allowed transitions 
     - result of an event can depend on the current state 
     - states and events have different types 
     - state machines
-	</Box>
-	<Box>
+	</div>
+	<div>
 		```mermaid
     stateDiagram-v2 
       [*] --> green 
@@ -86,7 +87,7 @@ outside the component tree, or with (almost) any frond-end framework or state ma
       yellow --> red: next 
       red --> green: next 
     ```
-	</Box>
+	</div>
 </Row>
 
 ---
@@ -122,29 +123,31 @@ function Loader() {
   | **_error_** | *true*    | *false*  |
   | *false*     | <Good />  | <Good /> |
   | *true*      | <Bad />   | <Good /> |
-  <Row2>
-    <Box>
-      **loading**
-      ```mermaid
-      stateDiagram-v2
-        [*] --> true
-        true --> false
-      ```
-    </Box>
-    <Box>
-      **error**
-      ```mermaid
-      stateDiagram-v2
-        [*] --> false
-        false --> true
-      ```
-    </Box>
-    <Box maxWidth="15em">
+  <Row level={2}>
+    <Row level={3}>
+      <div>
+        **loading**
+        ```mermaid
+        stateDiagram-v2
+          [*] --> true
+          true --> false
+        ```
+      </div>
+      <div>
+        **error**
+        ```mermaid
+        stateDiagram-v2
+          [*] --> false
+          false --> true
+        ```
+      </div>
+    </Row>
+    <div style={{ maxWidth: '15em' }}>
       - this part of business logic is expressed in the handlers 
         - lack of cohesion
         - easy to be inconsistent
-    </Box>
-  </Row2>
+    </div>
+  </Row>
 </Row>
 
 ---
@@ -153,8 +156,8 @@ function Loader() {
 
 ### Loader
 
-<Row>
-  <Col>
+<RowCode>
+  <Col level={2}>
     ```mermaid
     stateDiagram-v2
       [*] --> loading
@@ -163,16 +166,16 @@ function Loader() {
       error --> [*]
       success --> [*]
     ```
-    <Box>
+    <div>
       - make illegal states irrepresentable
       - express the succession of events
       - no business logic in the handlers
-    </Box>
+    </div>
   </Col>
     ```typescript
     !from ./samples/loader/machine.ts
     ```
-</Row>
+</RowCode>
 
 ---
 
@@ -194,9 +197,9 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Box width="40vh">
+<div style={{ width: '40vh' }}>
   ![turnstile gate](./turnstile.jpg)
-</Box>
+</div>
 
 ---
 
@@ -223,21 +226,19 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-	<Col>
-    <Box>
-    - pure function
-    - state then event
-      - cohesion (should not accept a payment when you can push the gate)
-      - a tool for dealing with human complexity (vs mathematical complexity)
-    - state switch
-      - has no default case
-      - every state type must be handeled
-    - event switch 
-      - has default case
-      - not every event type will trigger a transition
-      - exetensibility
-    </Box>
-	</Col>
+  <div>
+  - pure function
+  - state then event
+    - cohesion (should not accept a payment when you can push the gate)
+    - a tool for dealing with human complexity (vs mathematical complexity)
+  - state switch
+    - has no default case
+    - every state type must be handeled
+  - event switch 
+    - has default case
+    - not every event type will trigger a transition
+    - exetensibility
+  </div>
   ```typescript
   !from ./samples/turnstile/machine.ts
   ```
@@ -250,12 +251,10 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-  <Col>
-    <Box>
-      - simply pass the machine to `useReducer` hook
-      - `canPay` has zero knowledge of the transition graph
-    </Box>
-  </Col>
+  <div>
+    - simply pass the machine to `useReducer` hook
+    - `canPay` has zero knowledge of the transition graph
+  </div>
   ```tsx 
   !from ./samples/turnstile/component.tsx 7:21
   ```
@@ -305,9 +304,9 @@ function Loader() {
    </Card>
 </Row>
 
-<Box>
+<div>
   - `reset` is a self-transition
-</Box>
+</div>
 
 ---
 
@@ -316,13 +315,11 @@ function Loader() {
 ### Timer
 
 <Row>
-	<Col>
-    <Box>
-      - `elapsed` and `since` have same type but different semantics
-      - events have a `now` parameter so reducer can be a pure function
-        - easier to test
-    </Box>
-	</Col>
+  <div>
+    - `elapsed` and `since` have same type but different semantics
+    - events have a `now` parameter so reducer can be a pure function
+      - easier to test
+  </div>
   ```typescript
   !from ./samples/timer/machine.ts
   ```
@@ -335,12 +332,10 @@ function Loader() {
 ### Timer
 
 <Row>
-	<Col>
-    <Box>
-      - getter function to compute the displayed time
-      - ideally, we should colocate partial definitions of the getter with each state transition function (a library would solve this)
-    </Box>
-	</Col>
+  <div>
+    - getter function to compute the displayed time
+    - ideally, we should colocate partial definitions of the getter with each state transition function (a library would solve this)
+  </div>
   ```typescript
   !from ./samples/timer/count.ts
   ```
@@ -353,11 +348,9 @@ function Loader() {
 ### Timer
 
 <Row>
-  <Col>
-    <Box>
-      - `next` has zero knowledge of the transition graph
-    </Box>
-  </Col>
+  <div>
+    - `next` has zero knowledge of the transition graph
+  </div>
   ```tsx
   !from ./samples/timer/component.tsx 8:23
   ```
@@ -370,11 +363,9 @@ function Loader() {
 ### Timer
 
 <Row>
-  <Col>
-    <Box>
-      - labels
-    </Box>
-  </Col>
+  <div>
+    - labels
+  </div>
   ```tsx
   !from ./samples/timer/component.tsx 37:63
   ```
@@ -386,29 +377,25 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Flex align="center" direction="column" gap="6">
 <Row>
-	<Col>
-		```mermaid
-    stateDiagram-v2
-      [*] --> locked 
-      locked --> payment: pay 
-      payment --> unlocked: success
-      payment --> locked: error
-      unlocked --> locked: push 
-    ```
-	</Col>
+	```mermaid
+  stateDiagram-v2
+    [*] --> locked 
+    locked --> payment: pay 
+    payment --> unlocked: success
+    payment --> locked: error
+    unlocked --> locked: push 
+  ```
   <Card>
     <Turnstile2 />
   </Card>
 </Row>
 
-<Box>
+<div>
 - `payment` state is a meaningful waiting state
 - `pay` and `push` events are produced by the user
 - `sucess` and `error` events are produced by the system
-</Box>
-</Flex>
+</div>
 
 ---
 
@@ -417,8 +404,6 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-	<Col>
-	</Col>
   ```typescript
   !from ./samples/turnstile2/machine.ts
   ```
@@ -431,11 +416,9 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-  <Col>
-    <Box>
-      - effect handler has access to `send`
-    </Box>
-  </Col>
+  <div>
+    - effect handler has access to `send`
+  </div>
   ```tsx 
   !from ./samples/turnstile2/component.tsx 8:37
   ```
@@ -469,12 +452,12 @@ function Loader() {
     unlocked --> locked: push 
   ```
 </Row>
-<Box>
+<div>
   - `success` and `error` states are **junk states**
   - we will give machine the capability to send messages during transitions
   - effects for two-way communication
   - messages for one-way communication
-</Box>
+</div>
 
 ---
 
@@ -503,11 +486,11 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-  <Box>
+  <div>
     - we define a third type parameter for messages
     - we pass it to our extended reducer
     - we call it during the transition
-  </Box>
+  </div>
 ```typescript
 !from ./samples/turnstile3/machine.ts
 ```
@@ -520,12 +503,10 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-  <Col>
-    <Box>
-      - we nead a new hook (`useMachine`) because `useReducer` don't allow side effects
-      - we will inject the message listener
-    </Box>
-  </Col>
+  <div>
+    - we nead a new hook (`useMachine`) because `useReducer` don't allow side effects
+    - we will inject the message listener
+  </div>
   ```tsx 
   !from ./samples/turnstile3/component.tsx 9:35
   ```
@@ -538,11 +519,9 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-  <Col>
-    <Box>
-      - implementing message listener
-    </Box>
-  </Col>
+  <div>
+    - implementing message listener
+  </div>
   ```tsx 
   !from ./samples/turnstile3/component.tsx 83:96
   ```
@@ -555,11 +534,9 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-  <Col>
-    <Box>
-      - implementing message listener
-    </Box>
-  </Col>
+  <div>
+    - implementing message listener
+  </div>
   ```tsx 
   !from ./samples/turnstile3/component.tsx 37:60
   ```
@@ -569,15 +546,17 @@ function Loader() {
 
 # State Explosion
 
-<Box py="3">
-![state explosion](./state-explosion.webp)
+<Box width="10em">
+  ![state explosion](./state-explosion.webp)
 </Box>
 
+<div>
 - as complexity grows, usual clean code concerns araise ("god machine" as "god function" or "god class")
   - multiple responsibilities
   - multiple abstraction levels
 - in a typical application, number of independent state will multiply for each component
   - exponentional growth
+</div>
 
 ---
 
@@ -637,11 +616,11 @@ function Loader() {
 ## Pattern
 
 <Row>
-  <Box>
+  <div>
   - no learning curve
   - fewer dependencies
   - less descriptive
-  </Box>
+  </div>
 </Row>
 
 ---
@@ -651,14 +630,14 @@ function Loader() {
 ## xState
 
 <Row>
-  <Box>
+  <div>
   - industry standard
   - very good devtools (visual)
   - tools for testing (solved a problem they created by not being pure enough)
   - complete
   - context
   - reactive system is redundant with front-end framework
-  </Box>
+  </div>
   <QR name="XState" href="https://xstate.js.org/" />
 </Row>
 
@@ -669,11 +648,11 @@ function Loader() {
 ## Robot
 
 <Row>
-  <Box>
+  <div>
   - lightweight (1kb)
   - context
   - reactive system is redundant with front-end framework
-  </Box>
+  </div>
   <QR name="Robot" href="https://thisrobot.life/" />
 </Row>
 
@@ -684,7 +663,7 @@ function Loader() {
 ## Constellar
 
 <Row>
-  <Box>
+  <div>
   - personal project
   - not production ready
   - clear separation of concerns
@@ -693,7 +672,7 @@ function Loader() {
   - optics
   - would love your feedback and your stars (but mostly you feedback)
   - maybe we can make it production ready together!
-  </Box>
+  </div>
   <QR name="Constellar" href="https://prncss-xyz.github.io/constellar/" />
 </Row>
 
@@ -701,13 +680,15 @@ function Loader() {
 
 ## Some Smells
 
-![smell](./smell.webp)
+<Box width="10em">
+  ![smell](./smell.webp)
+</Box>
 
 ---
 
 ## Some Smells
 
-<TwoCols>
+<TwoColsTbl>
 | :poop: | :rose: |
 |--------------- | --------------- |
 | some succession of states should never happen | use a state machine |
@@ -716,7 +697,7 @@ function Loader() {
 | some combination of states should never happen in your application | merge different states (machines or values) into a single machine |
 | the machine mixes different concerns or abstraction levels | use multiple machines (connect or compose) |
 | the machine has junk states that do not convey useful information | use messages |
-</TwoCols>
+</TwoColsTbl>
 
 **Happy Smelling!**
 
@@ -729,7 +710,7 @@ function Loader() {
 
 <Row>
   <QR name="LinkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
-  <Box>
+  <div>
     **about me**
     - full stack developer
     - self-taught, math background
@@ -737,5 +718,5 @@ function Loader() {
     - freelance + working on [Constellar](https://prncss-xyz.github.io/constellar/)
     - looking for a permanent position
     - grateful for a review
-  </Box>
+  </div>
 </Row>

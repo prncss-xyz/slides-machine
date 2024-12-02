@@ -1,16 +1,25 @@
-import { ReactNode } from 'react'
-import { Flex } from '@radix-ui/themes'
+import { cva } from '@/generated/styled-system/css'
+import { styled } from '@/generated/styled-system/jsx'
 
-export function Col({ children }: { children: ReactNode }) {
-	return (
-		<Flex
-      gap="4"
-      direction="column"
-      align="center"
-      justify="center"
-      width="30vw"
-    >
-			{children}
-		</Flex>
-	)
-}
+const style = cva({
+	base: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		gap: '6',
+	},
+	variants: {
+		level: {
+			1: {},
+			2: {
+				gap: '4',
+			},
+			3: {
+				gap: '3',
+			},
+		},
+	},
+})
+
+export const Col = styled('div', style)

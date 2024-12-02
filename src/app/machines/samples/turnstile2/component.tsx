@@ -1,9 +1,10 @@
 'use client'
-import { Flex, Button } from '@radix-ui/themes'
 import { useEffect, useMemo, useReducer } from 'react'
 import { turnstileMachine } from './machine'
 import { Json } from '@/components/json'
 import { localCached } from '@/utils/localCached'
+import { Box, Flex } from '@/generated/styled-system/jsx'
+import { Button } from '@/components/layout/button'
 
 function useTurnstile() {
 	const [state, send] = useReducer(
@@ -39,20 +40,24 @@ function useTurnstile() {
 export function Turnstile2() {
 	const turnstile = useTurnstile()
 	return (
-		<Flex direction="column" gap="1" width="27rem">
-			<Button
-				disabled={!turnstile.canPay}
-				onClick={turnstile.pay}
-			>
-				Pay
-			</Button>
-			<Button
-				disabled={!turnstile.canPush}
-				onClick={turnstile.push}
-			>
-				Push
-			</Button>
-			<Json value={turnstile.state} />
+		<Flex direction="column" gap="6">
+			<Flex direction="column" gap="1">
+				<Button
+					disabled={!turnstile.canPay}
+					onClick={turnstile.pay}
+				>
+					Pay
+				</Button>
+				<Button
+					disabled={!turnstile.canPush}
+					onClick={turnstile.push}
+				>
+					Push
+				</Button>
+			</Flex>
+			<Box width="13em">
+				<Json value={turnstile.state} />
+			</Box>
 		</Flex>
 	)
 }

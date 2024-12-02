@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import '@radix-ui/themes/styles.css'
 import './globals.css'
-import { Box, Theme } from '@radix-ui/themes'
+
 import { KeyNav } from '@/slides/keynav'
 import { Toaster } from 'react-hot-toast'
+import { css } from '@/generated/styled-system/css'
+import { Col } from '@/components/layout/col'
 
 const geistSans = localFont({
 	src: './fonts/GeistVF.woff',
@@ -28,16 +29,18 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable}`}>
-				<Theme>
-					<KeyNav>
-						<Box px="9" style={{ backgroundColor: 'var(--gray-2)' }}>
-							{children}
-						</Box>
-						<Toaster />
-					</KeyNav>
-				</Theme>
+		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+			<body
+				className={css({
+					backgroundColor: 'gray2',
+					fontSize: '6',
+					fontFamily: 'sans',
+				})}
+			>
+				<KeyNav>
+					<Col>{children}</Col>
+					<Toaster />
+				</KeyNav>
 			</body>
 		</html>
 	)

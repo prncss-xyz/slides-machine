@@ -1,4 +1,5 @@
-import { Flex, Link } from '@radix-ui/themes'
+import { Flex } from '@/generated/styled-system/jsx'
+import { A } from './layout/a'
 import qrcode from 'qrcode'
 
 export async function QR({ name, href }: { name: string; href: string }) {
@@ -15,7 +16,7 @@ export async function QR({ name, href }: { name: string; href: string }) {
 					}}
 				/>
 			</a>
-			<Link href={href}>{name}</Link>
+			<A href={href}>{name}</A>
 		</Flex>
 	)
 }

@@ -1,9 +1,10 @@
 'use client'
-import { Flex, Button, Box } from '@radix-ui/themes'
 import { useEffect, useReducer, useState } from 'react'
 import { timerMachine } from './machine'
 import { Json } from '@/components/json'
 import { count } from './count'
+import { Box, Flex } from '@/generated/styled-system/jsx'
+import { Button } from '@/components/layout/button'
 
 function useTimer(now: number) {
 	const [state, send] = useReducer(
@@ -45,13 +46,13 @@ export function Timer() {
 		useTimer(now)
 	const label = labels[next]
 	return (
-		<Flex direction="column" gap="6" width="27rem">
+		<Flex direction="column" gap="6">
 			<Flex direction="column" gap="1">
 				<Box>{count}</Box>
 				<Button onClick={toggle}>{label}</Button>
 				<Button onClick={reset}>reset</Button>
 			</Flex>
-			<Box>
+			<Box width="16em">
 				<Json value={state} />
 			</Box>
 		</Flex>
