@@ -4,12 +4,11 @@ export const Ul = styled('ul', {
 	base: {
 		listStyleType: 'disc',
 		listStylePosition: 'inside',
-		maxWidth: 'readable',
-		'ul &, ol &': {
+		':where(ul,ol) &': {
 			listStyleType: 'circle',
 			marginLeft: '1em',
 		},
-		'ul ol &, ol ol &, ul ul &, ol ul &': {
+		':where(ul,ol) :where(ul,ol) &': {
 			listStyleType: 'square',
 			marginLeft: '1em',
 		},

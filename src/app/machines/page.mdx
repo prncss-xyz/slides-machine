@@ -21,9 +21,9 @@ _by Juliette Lamarche_
 
 ## Scopes
 
-I will start by making a distinction between state management and state manipulation. By state manipulation, I mean the business logic side of things,
-the pure functions which maps one state to another. By state management, I mean the physical implementation of that state, including concerns such a storage and
-reactivity. I will mostly focus on the state management side of things. Although examples will be with in React, the main concepts also apply on the backend, on the frond-end
+I will start by making a distinction between physical and logical state management. By state logical state management, I mean the business logic side of things,
+the pure functions which maps one state to another. By physical state management, I mean the actual implementation of that state, including concerns such a storage and
+reactivity. I will mostly focus on the logical side of things. Although examples will be with in React, the main concepts also apply on the backend, on the frond-end
 outside the component tree, or with (almost) any frond-end framework or state management library.
 
 ---
@@ -703,7 +703,6 @@ function Loader() {
 
 ---
 
-
 ## Juliette Lamarche
 
 ### Let's connect
@@ -712,11 +711,8 @@ function Loader() {
   <QR name="LinkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
   <div>
     **about me**
-    - full stack developer
+    - front-end developper at Banque Nationale du Canada
     - self-taught, math background
     - TypeScript, React, FP
-    - freelance + working on [Constellar](https://prncss-xyz.github.io/constellar/)
-    - looking for a permanent position
-    - grateful for a review
   </div>
 </Row>

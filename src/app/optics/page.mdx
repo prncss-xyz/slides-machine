@@ -1,0 +1,494 @@
+import { Good, Bad } from '@/components/icons/check'
+import { QR } from '@/components/qr'
+import { Card } from '@/components/layout/card'
+import { Row } from '@/components/layout/row'
+import { Col } from '@/components/layout/col'
+import { TwoColsTbl } from '@/components/layout/two-cols-tbl'
+import { SimpleTbl } from '@/components/layout/simple-tbl'
+import { RowCode } from '@/components/layout/row-code'
+import { Box } from '@/generated/styled-system/jsx'
+
+# Functional Optics
+
+## For State Management and Beyond
+
+_by Juliette Lamarche_
+
+---
+
+## About Me
+
+<Row>
+  <QR name="LinkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
+  <div>
+    **about me**
+    - Juliette
+    - front-end developper at Banque Nationale du Canada
+    - self-taught, math background
+    - TypeScript, React, FP
+  </div>
+</Row>
+
+---
+
+## Scope
+
+I will start by making a distinction between physical and logical state management. By logical state management, I mean the business logic side of things,
+the pure functions which transforms one state to another. By physical state management, I mean the container holding that state, in relation to concerns such a storage, scope and
+reactivity. I will mostly focus on the logical side of things. 
+
+---
+
+## Optics
+
+Optics have been used in Haskell at least since 2007. Since then, they have been propted to almost every major language, functional or not. As far as I'm concerned, they are the most underated major concept of functional programming. I've been using them
+on both the front-end and the backend.
+
+---
+
+## What are Optics Anyways
+
+Manipulating complex data structures in a way that is easy read or refactor.
+
+Roughly, the are the functional equivalent of getters and setters. However due to their funcitonal nature, they can compose conveniently and can handle a wider variety of situations.
+
+We will slowly get there, starting from somewhat trivial exemples, and be will eventualy be a little more precise about what functional optics are.
+
+---
+
+## Iso
+
+### Celcius vs Farenheit
+
+<Row>
+<div>
+</div>
+<Box width="40vh">
+
+```typescript
+function celciusToFarenheit(celcius: number) {
+  return (celcius * 1.8) + 32
+}
+
+function farenheitToCelcius(farenheit: number) {
+  return (farenheit - 32) / 1.8
+}
+
+const cToF: Iso<number, number> = {
+  get: celciusToFarenheit,
+  set: farenheitToCelcius,
+}
+
+interface Iso <A, B> {
+  get: (a: A) => B,
+  set: (b: B) => A,
+}
+```
+
+</Box>
+</Row>
+
+
+---
+
+## Prism
+
+### Number vs String
+
+<Row>
+<div>
+
+- parsing
+- serialization, deserializtion (date)
+  - javascript ↔ database
+- form input
+- cf. [Effect Schema](https://effect.website/docs/schema/introduction/)
+
+</div>
+<Box width="40vh">
+
+```typescript
+function stringToNumber(str: string) {
+  const r = Number(str)
+  if (Number.isNaN(r)) return undefined
+  return r
+} 
+
+function numberToString(num: number) {
+  return String(num)
+}
+
+const sToN: Prism<number, string> = {
+  get: stringToNumber,
+  set: numberToString,
+}
+
+const even: Prism<number, string> = {
+  get: x % 2 === 0 ? x : undefined,
+  // we tolerate the fact that we
+  // can set to an odd number 
+  set: x => x,
+}
+
+interface Prism <A, B> {
+  get: (a: A) => B | undefined,
+  set: (b: B) => A,
+}
+
+```
+</Box>
+</Row>
+
+---
+
+<Row>
+<div>
+</div>
+<Box width="40vh">
+
+## Lens
+
+### Prop
+
+- parthood
+
+```typescript
+function prop(key) {
+  return {
+    get: (whole) => whole[key],
+    set: (part, whole) => ({ ...whole, [key]: part })};
+  }
+}
+
+interface Lens <A, B> {
+  get: (a: A) => B,
+  set: (b: B, a: A) => A,
+}
+```
+
+
+</Box>
+</Row>
+
+---
+
+## Optional
+
+### Prop (again)
+
+<Row>
+<div>
+</div>
+<Box width="40vh">
+
+
+```typescript
+interface Optinal <A, B> {
+  get: (a: A) => B | undefined,
+  set: (b: B, a: A) => A,
+}
+
+function prop(key): Lens<Whole, Part> {
+  return {
+    get: (whole) => whole[key],
+    set: (part, whole) => ({ ...whole, [key]: part })};
+  }
+}
+```
+
+</Box>
+</Row>
+
+---
+
+So far optics are an interface with properties
+
+## Hierarchy
+
+<Row>
+	<SimpleTbl>
+
+  |             | _can fail_ |          |
+  | ----------- | :-------: | :------: |
+  | **_invertible_** |*true*| *false*  |
+  | *false*     |optional| lens |
+  | *true*      | prism   | iso |
+
+	</SimpleTbl>
+	<div>
+		```mermaid
+    stateDiagram-v2 
+      eq --> iso 
+      iso --> prism
+      iso --> lens
+      prism --> optional
+      lens --> optional
+    ```
+	</div>
+</Row>
+
+---
+
+So far optics are an interface with properties
+
+### Lens Laws
+
+- **get after set**: `l.get(l.set(a)(s)) === a`
+- **get after set**: `l.set(l.get(s))(s) === s`
+- **set after set**: `l.set(b)(l.set(a)(s)) === l.set(b)(s)`
+  - **idempotency**: `l.set(a)(l.set(a)(s)) === l.set(a)(s)`
+  - counterexemple: a queue
+- reference stability: `l.set(a, l.get(a)) is a`
+- great to write tests (property-based testing)
+
+---
+
+## Composition (simplified)
+
+- composition preserves the laws
+- actual implementation is more complicated
+  - propagating undefined (like optional chaining)
+  - keep prisms and isos working backward
+  - multiple focus (later)
+
+```typescript
+
+function compose(p, q) {
+  return {
+    get: (whole) => b.get(a.get(whole)),
+    set: (part) => (whole) => a.set(b.set(part)(a.get(whole)))(whole),
+  }
+}
+```
+
+---
+
+## Composition
+
+```typescript
+function eq<T>() {
+  return {
+    get: (t: T) => t,
+    set: (t: T) => t,
+  }
+}
+
+
+function prop(key) {
+  return function (o) {
+    return compose(o, {
+      get: (whole) => whole[key],
+      set: (part, whole) => ({ ...whole, [key]: part })};
+    })
+  }
+}
+
+```
+---
+
+## Composition
+
+```typescript
+
+type T = {
+  a: {
+    b: number
+  }
+}
+
+const focus = prop('b')(prop('a')(eq()))
+
+const focusA = flow(eq<T>(), prop('a'), prop('b'))
+const focusB = optic<T)().prop('a').prop('b')
+```
+
+- writing get and set as separate functions you would:
+  - have to maintain an implicit coupling
+  - make sure they work in reverse order of each other
+  - be bored while writing (dot dot dot hell)
+- also, with optional, you get optional chaining for free
+  - beyond object properties
+
+---
+
+## Composition
+
+```typescript
+function includes(key) {
+  return function (o) {
+    return compose(o, {
+      get: (xs) => xs.includes(x),
+      set: (v, xs) => (v ? insertValue(x, xs) : removeValue(x, xs)),
+    })
+  }
+}
+```
+
+- binding a value inside an array to a checkbox
+
+---
+
+### Composition
+
+<SimpleTbl>
+
+| | iso | lens | prism | optional  |
+| :--: | :--: | :--: | :--: | :--: |
+| iso       | iso | lens | prism | optional |
+| lens      | lens | lens | lens | optional | optional |
+| prism     | prism | optional | prism | optional |
+| optional  | optional | optional |optional |optional |
+
+</SimpleTbl>
+
+<Box style={{height: "2em"}} />
+
+- reversible if both are reversible
+- can fail if either can fail
+
+---
+
+## Removable
+
+### Prop (again)
+
+```typescript
+function prop(key) {
+  return function (o) {
+    return compose(o, {
+      get: (whole) => whole[key],
+      set: (part, whole) => ({ ...whole, [key]: part })},
+      del: (whole) => {
+        if (!(key in whole)) return whole
+        const res = { ...whole }
+        delete res[key]
+        return res
+      },
+    })
+  }
+}
+```
+
+---
+
+## Unlawful lens
+
+### Queue
+
+```typescript
+function queue(key) {
+  return function (o) {
+    return compose(o, {
+      get: (xs) => xs.at(0),
+      set: (x, xs) => [... xs, x],
+      del: (xs) => (xs.length > 0 ? xs.slice(1) : xs),
+    })
+  }
+}
+```
+
+- **set after set**: `l.set(b)(l.set(a)(s)) === l.set(b)(s)`
+  - **idempotency**: `l.set(a)(l.set(a)(s)) === l.set(a)(s)`
+- can still compose and be reused in any integrations
+
+---
+
+## Traversal
+
+```typescript
+
+// focus even numbers
+const t = flow(eq<number[]>, elems(), when(x => x % 2 === 0))
+
+// get and set targets the first even number
+const v0 = t.get([1, 2, 3, 4]) // 2
+const v1 = t.set(0, [1, 2, 3, 4]) // [1, 0, 3, 0]
+
+// fold and map target all even numbers
+const v2 = t.fold(toArray(), [1, 2, 3, 4]) // [2, 4]
+const v3 = t.map(x => x + 1, [1, 2, 3, 4]) // [1, 3, 3, 5]
+// also common to have a `map` method on sigle focus lens
+```
+
+---
+
+## Implementations
+
+### Lens as pattern
+
+- core can take 10 LOC
+- separation of concern
+- handling convertions between structures
+
+---
+
+### Older stuff
+
+- pre typescript era
+  - runtime is easier to implement than typing
+  - difficult to retrofit type good inference
+- [ramda](https://ramdajs.com/) (lens only)
+- [calmm-js/partial.lenses](https://github.com/calmm-js/partial.lenses#use-of-undefined) old (pre-ts), but lots of stuff
+- [cyclejs](https://cycle.js.org/)
+  - front-end framework that uses optics
+
+---
+
+### Modern libraries
+
+- [optics-ts](https://akheron.github.io/optics-ts/reference-mc/)
+  - heavy on compiler
+  - some bugs in type inference (false positives, no false negatives, infinite cycles)
+- [fp-ts/optic: A porting of zio-optics to TypeScript](https://github.com/fp-ts/optic)
+  - same author as monocle
+  - no folds/transversals
+- [constellar]()
+  - truly yours
+  - still experimental
+  - focus on pratical use cases
+
+---
+
+## Integrations
+
+### React Integrations
+
+- fits with react model (immutability)
+- plain hooks
+- jotai
+  - [jotaijs/jotai-optics: Jotai integration library for optics-ts](https://github.com/jotaijs/jotai-optics)
+
+#### Zustand
+
+- Docs refers to ramda and optics-ts as fancy setters
+- [Practice with no store actions](https://docs.pmnd.rs/zustand/guides/practice-with-no-store-actions)
+
+---
+
+## What are the alternatives (front-end)
+
+### Proxy solutions
+
+- tools are easier to understand
+- workflow is implicit
+- for simple use cases both ways seem comparable
+- only equivalent to simple cases
+- e.g.
+  - standalone: immer
+  - state management: valtio
+  - framework: solidjs
+
+---
+
+## What are the complements
+
+- spatial vs temporal (observable, finite state machine)
+- async reactivity: rxjs
+- state machine: xstate
+
+---
+
+## Concluding remarks
+
+- try, tested theorized
+- shared accross languages and frameworks
