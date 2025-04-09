@@ -149,8 +149,8 @@ function Loader() {
     </Row>
     <ImgBox>
       - this part of business logic is expressed in the handlers 
-      - you need to inspect all the code to ensure it is enforced
-      - would be better to have it near the state description
+      - you need to inspect all the code to understand the flow of states
+      - would be better to have it defined at a central place
     </ImgBox>
   </Row>
 </Row>
@@ -192,8 +192,6 @@ function Loader() {
 - finite number of possible states
   - exhaustivity
   - visual communication (domain experts)
-- think state then event
-- domain consistency
 - but limited because cannot hold data
 
 ---
@@ -286,18 +284,6 @@ function Loader() {
 
 ## Extended Finite State Machines
 
-- xState context
-  - proven to work
-  - *but* makes illegal context possible to express
-  - do not use type information to its full potential (as a tool for thinking)
-- multiple states
-  - state type and state payload state are coupled
-  - less known
-
----
-
-## Extended Finite State Machines
-
 ### Timer
 
 <Row>
@@ -315,6 +301,7 @@ function Loader() {
 </Row>
 
 <div>
+  - type and payload
   - `reset` is a self-transition
 </div>
 
@@ -404,8 +391,9 @@ function Loader() {
 <div>
 - `payment` state is a meaningful waiting state
 - payment implementation is not part of the machine
-- `pay` and `push` events are produced by the user
-- `sucess` and `error` events are produced by the system
+- two sources of events are treated the same way
+  - `pay` and `push` events are produced by the user
+  - `sucess` and `error` events are produced by the system
 </div>
 
 ---
@@ -428,7 +416,7 @@ function Loader() {
 
 <Row>
   <div>
-    - effect handler calls to `send`
+    - effect handler calls `send`
   </div>
   ```tsx 
   !from ./samples/turnstile2/component.tsx 11:42
