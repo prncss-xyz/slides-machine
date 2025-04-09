@@ -10,7 +10,7 @@ import { Turnstile2 } from './samples/turnstile2/component'
 import { Turnstile3 } from './samples/turnstile3/component'
 import { TwoColsTbl } from '@/components/layout/two-cols-tbl'
 import { RowCode } from '@/components/layout/row-code'
-import { ImgBox, TextBox } from '@/components/layout/boxes'
+import { ImgBox } from '@/components/layout/boxes'
 import { Box } from '@/generated/styled-system/jsx'
 
 # State Machines:
@@ -562,13 +562,13 @@ Let's add notification.
   <ImgBox>
     ![state explosion](./state-explosion.webp)
   </ImgBox>
-  <TextBox>
+  <div>
   - as complexity grows, usual clean code concerns araise ("god machine" as "god function" or "god class")
     - multiple responsibilities
     - multiple abstraction levels
   - in a typical application, number of independent state will multiply for each component
     - exponentional growth
-  </TextBox>
+  </div>
 
 ---
 
@@ -576,13 +576,11 @@ Let's add notification.
 
 ## Connecting
 
-<TextBox>
 - use many machines in one framework
 - some machine can have local scopes, other can be global
 - have effects or messages connect to another state machine
 - xState (actor model)
 - useReducer (useContext)
-</TextBox>
 
 ---
 
@@ -590,7 +588,6 @@ Let's add notification.
 
 ## Composing
 
-<TextBox>
 - statecharts
 - composition is a operation that takes simple machines to create a more complex one
 - "Harel, D. (1987). A Visual Formalism for Complex Systems. Science of Computer Programming, 231–274".
@@ -602,7 +599,6 @@ Let's add notification.
   - hierarchical
   - sum
   - history
-</TextBox>
 
 ---
 
@@ -637,14 +633,14 @@ Let's add notification.
 ## xState
 
 <Row>
-  <TextBox>
+  <div>
   - industry standard
   - very good devtools (visual)
   - reactive system is redundant with front-end framework
   - tools for testing (solved a problem they created by not being pure enough)
   - machine have a shared context for all states 
       - vs. a payload that depends on the type of the state
-  </TextBox>
+  </div>
   <QR name="XState" href="https://xstate.js.org/" />
 </Row>
 
@@ -655,11 +651,11 @@ Let's add notification.
 ## Robot
 
 <Row>
-  <TextBox>
+  <div>
   - lightweight (1kb)
   - context
   - reactive system is redundant with front-end framework
-  </TextBox>
+  </div>
   <QR name="Robot" href="https://thisrobot.life/" />
 </Row>
 
@@ -670,7 +666,7 @@ Let's add notification.
 ## Constellar
 
 <Row>
-  <TextBox>
+  <div>
   - personal project
   - not production ready
   - clear separation of concerns
@@ -679,7 +675,7 @@ Let's add notification.
   - optics
   - would love your feedback and your stars (but mostly you feedback)
   - maybe we can make it production ready together!
-  </TextBox>
+  </div>
   <QR name="Constellar" href="https://prncss-xyz.github.io/constellar/" />
 </Row>
 
