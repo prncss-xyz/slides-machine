@@ -1,9 +1,15 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Message, turnstileMachine } from './machine'
+import {
+	Message,
+	turnstileMachine,
+} from './machine'
 import { Json } from '@/components/json'
 import toast from 'react-hot-toast'
-import { Box, Flex } from '@/generated/styled-system/jsx'
+import {
+	Box,
+	Flex,
+} from '@/generated/styled-system/jsx'
 import { Button } from '@/components/layout/button'
 
 function useMachine<State, Event, Message>(
@@ -13,17 +19,26 @@ function useMachine<State, Event, Message>(
 		event: Event,
 		emit: (message: Message) => void,
 	) => State,
+  // !mark(1:1)
 	emit: (message: Message) => void,
 ) {
 	const [state, setState] = useState(initial)
 	return {
 		state,
 		send: (event: Event) => {
-			const nextState = reducer(state, event, emit)
+			const nextState = reducer(
+				state,
+				event,
+				emit,
+			)
 			return setState(nextState)
 		},
 		next: (event: Event) => {
-			const nextState = reducer(state, event, () => {})
+			const nextState = reducer(
+				state,
+				event,
+				() => {},
+			)
 			return nextState
 		},
 	}
@@ -42,9 +57,14 @@ function useTurnstile() {
 	}, [send, state])
 	return {
 		pay: () =>
-			send({ type: 'pay', id: '123', now: Date.now() }),
+			send({
+				type: 'pay',
+				id: '123',
+				now: Date.now(),
+			}),
 		canPay:
-			next({ type: 'pay', id: '123', now: 0 }) !== state,
+			next({ type: 'pay', id: '123', now: 0 }) !==
+			state,
 		push: () => send({ type: 'push' }),
 		canPush: next({ type: 'push' }) !== state,
 		state,
@@ -69,7 +89,7 @@ export function Turnstile3() {
 					Push
 				</Button>
 			</Flex>
-			<Box width="13em">
+			<Box width="15em">
 				<Json value={turnstile.state} />
 			</Box>
 		</Flex>

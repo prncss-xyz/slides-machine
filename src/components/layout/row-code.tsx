@@ -6,11 +6,14 @@ export const RowCode = styled('div', {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		['& > *:first-child']: { backgroundColor: 'pink' },
+		gap: '3em',
+		['& > :first-child']: {
+			flexGrow: 1,
+			width: '30vw',
+		},
 		['& > *:not(:first-child)']: {
-			backgroundColor: 'yellow',
-			flexGrow: 4,
-			minWidth: '20vw',
+			flexGrow: 3,
+			width: '55vw',
 		},
 	},
 })

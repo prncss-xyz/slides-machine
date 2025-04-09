@@ -6,8 +6,14 @@ type Event =
 	| { type: 'reset'; now: number }
 
 export const timerMachine = {
-	initial: { type: 'stopped', elapsed: 0 } as State,
-	reducer: function (state: State, event: Event): State {
+	initial: {
+		type: 'stopped',
+		elapsed: 0,
+	} as State,
+	reducer: function (
+		state: State,
+		event: Event,
+	): State {
 		switch (state.type) {
 			case 'stopped':
 				switch (event.type) {
@@ -29,7 +35,10 @@ export const timerMachine = {
 							elapsed: event.now - state.since,
 						}
 					case 'reset':
-						return { type: 'running', since: event.now }
+						return {
+							type: 'running',
+							since: event.now,
+						}
 					default:
 						return state
 				}

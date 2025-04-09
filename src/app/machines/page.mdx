@@ -1,4 +1,5 @@
 import { Good, Bad } from '@/components/icons/check'
+import  AboutMe  from '@/components/aboutMe.mdx'
 import { QR } from '@/components/qr'
 import { Card } from '@/components/layout/card'
 import { Row } from '@/components/layout/row'
@@ -9,6 +10,7 @@ import { Turnstile2 } from './samples/turnstile2/component'
 import { Turnstile3 } from './samples/turnstile3/component'
 import { TwoColsTbl } from '@/components/layout/two-cols-tbl'
 import { RowCode } from '@/components/layout/row-code'
+import { ImgBox, TextBox } from '@/components/layout/boxes'
 import { Box } from '@/generated/styled-system/jsx'
 
 # State Machines:
@@ -19,12 +21,15 @@ _by Juliette Lamarche_
 
 ---
 
+<AboutMe />
+
+---
+
 ## Scopes
 
-I will start by making a distinction between physical and logical state management. By state logical state management, I mean the business logic side of things,
-the pure functions which maps one state to another. By physical state management, I mean the actual implementation of that state, including concerns such a storage and
-reactivity. I will mostly focus on the logical side of things. Although examples will be with in React, the main concepts also apply on the backend, on the frond-end
-outside the component tree, or with (almost) any frond-end framework or state management library.
+I will start by making a distinction between physical and logical state management. By logical state management, I mean the business logic side of things,
+the pure functions which maps one state to another. By physical state management, I mean the actual implementation of that state logic, including concerns such a storage, persistence, scope and
+reactivity. Here, I will focus on the logical side of things. Although examples will be in React, the main concepts apply to any front-end framework, to front-end code happening outside the component tree or on the the back-end.
 
 ---
 
@@ -42,16 +47,17 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 
 <Row>
   <div>
+    - update by sending the next value
     - useState 
     - free transitions, let consumers do whatever they want
-    - symmetry between getters and setters 
+    - symmetry between reading and writing  (same type)
     - setter can be a value or an update function 
     - optics 
     - _e.g.:_ form-like, query object
   </div>
-  <Box width="40vh">
+  <ImgBox>
     ![filter](./filter.png)
-  </Box>
+  </ImgBox>
 </Row>
 
 ---
@@ -60,9 +66,9 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 
 ### Update by Events
 
-<div style={{ width: '40vh' }}>
+<ImgBox>
 	![traffic lights](./lights.jpg)
-</div>
+</ImgBox>
 
 ---
 
@@ -73,10 +79,9 @@ outside the component tree, or with (almost) any frond-end framework or state ma
 <Row>
 	<div>
 		- useReducer, Redux (actions)
-    - asymmetry between reads and writes (different types)
+    - asymmetry between reading and writing (different types)
     - restricted set of allowed transitions 
-    - result of an event can depend on the current state 
-    - states and events have different types 
+    - the same event can have different results depending on the current state
     - state machines
 	</div>
 	<div>
@@ -142,11 +147,11 @@ function Loader() {
         ```
       </div>
     </Row>
-    <div style={{ maxWidth: '15em' }}>
+    <ImgBox>
       - this part of business logic is expressed in the handlers 
-        - lack of cohesion
-        - easy to be inconsistent
-    </div>
+      - you need to inspect all the code to ensure it is enforced
+      - would be better to have it near the state description
+    </ImgBox>
   </Row>
 </Row>
 
@@ -197,9 +202,9 @@ function Loader() {
 
 ### Turnstile Gate
 
-<div style={{ width: '40vh' }}>
+<ImgBox>
   ![turnstile gate](./turnstile.jpg)
-</div>
+</ImgBox>
 
 ---
 
@@ -225,7 +230,7 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Row>
+<RowCode>
   <div>
   - pure function
   - state then event
@@ -234,15 +239,16 @@ function Loader() {
   - state switch
     - has no default case
     - every state type must be handeled
+    - exhaustivity
   - event switch 
     - has default case
-    - not every event type will trigger a transition
-    - exetensibility
+    - unhandled event type means the event is not triggering a transition
+    - extensibility
   </div>
   ```typescript
   !from ./samples/turnstile/machine.ts
   ```
-</Row>
+</RowCode>
 
 ---
 
@@ -250,27 +256,31 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Row>
+<Col>
+  ```tsx 
+  !from ./samples/turnstile/component.tsx 32:32
+  ```
+  ```tsx 
+  !from ./samples/turnstile/component.tsx 36:47
+  ```
+</Col>
+
+
+---
+
+## Finite State Machines
+
+### Turnstile Gate
+
+<RowCode>
   <div>
     - simply pass the machine to `useReducer` hook
     - `canPay` has zero knowledge of the transition graph
   </div>
   ```tsx 
-  !from ./samples/turnstile/component.tsx 7:21
+  !from ./samples/turnstile/component.tsx 11:29
   ```
-</Row>
-
----
-
-## Finite State Machines
-
-### Turnstile Gate
-
-<Row>
-  ```tsx 
-  !from ./samples/turnstile/component.tsx 23:42
-  ```
-</Row>
+</RowCode>
 
 ---
 
@@ -314,7 +324,7 @@ function Loader() {
 
 ### Timer
 
-<Row>
+<RowCode>
   <div>
     - `elapsed` and `since` have same type but different semantics
     - events have a `now` parameter so reducer can be a pure function
@@ -323,7 +333,7 @@ function Loader() {
   ```typescript
   !from ./samples/timer/machine.ts
   ```
-</Row>
+</RowCode>
 
 ---
 
@@ -331,15 +341,14 @@ function Loader() {
 
 ### Timer
 
-<Row>
+<RowCode>
   <div>
-    - getter function to compute the displayed time
-    - ideally, we should colocate partial definitions of the getter with each state transition function (a library would solve this)
+    - we use a function to compute the displayed time
   </div>
   ```typescript
   !from ./samples/timer/count.ts
   ```
-</Row>
+</RowCode>
 
 ---
 
@@ -347,14 +356,14 @@ function Loader() {
 
 ### Timer
 
-<Row>
+<RowCode>
   <div>
     - `next` has zero knowledge of the transition graph
   </div>
   ```tsx
-  !from ./samples/timer/component.tsx 8:23
+  !from ./samples/timer/component.tsx 16:32
   ```
-</Row>
+</RowCode>
 
 ---
 
@@ -362,14 +371,15 @@ function Loader() {
 
 ### Timer
 
-<Row>
+<RowCode>
   <div>
+    - the `useEffect` hook sends events to the state machine
     - labels
   </div>
   ```tsx
-  !from ./samples/timer/component.tsx 37:63
+  !from ./samples/timer/component.tsx 34:69
   ```
-</Row>
+</RowCode>
 
 ---
 
@@ -393,6 +403,7 @@ function Loader() {
 
 <div>
 - `payment` state is a meaningful waiting state
+- payment implementation is not part of the machine
 - `pay` and `push` events are produced by the user
 - `sucess` and `error` events are produced by the system
 </div>
@@ -417,11 +428,33 @@ function Loader() {
 
 <Row>
   <div>
-    - effect handler has access to `send`
+    - effect handler calls to `send`
   </div>
   ```tsx 
-  !from ./samples/turnstile2/component.tsx 8:37
+  !from ./samples/turnstile2/component.tsx 11:42
   ```
+</Row>
+
+---
+
+## Messages
+
+### Turnstile Gate
+
+Let's add notification.
+
+<Row>
+	```mermaid
+  stateDiagram-v2
+    [*] --> locked 
+    locked --> payment: pay 
+    payment --> unlocked: success
+    payment --> locked: error
+    unlocked --> locked: push 
+  ```
+  <Card>
+    <Turnstile3 />
+  </Card>
 </Row>
 
 ---
@@ -466,26 +499,6 @@ function Loader() {
 ### Turnstile Gate
 
 <Row>
-	```mermaid
-  stateDiagram-v2
-    [*] --> locked 
-    locked --> payment: pay 
-    payment --> unlocked: success
-    payment --> locked: error
-    unlocked --> locked: push 
-  ```
-  <Card>
-    <Turnstile3 />
-  </Card>
-</Row>
-
----
-
-## Messages
-
-### Turnstile Gate
-
-<Row>
   <div>
     - we define a third type parameter for messages
     - we pass it to our extended reducer
@@ -502,15 +515,30 @@ function Loader() {
 
 ### Turnstile Gate
 
-<Row>
+<RowCode>
   <div>
     - we nead a new hook (`useMachine`) because `useReducer` don't allow side effects
     - we will inject the message listener
   </div>
   ```tsx 
-  !from ./samples/turnstile3/component.tsx 9:35
+  !from ./samples/turnstile3/component.tsx 15:45
   ```
-</Row>
+</RowCode>
+
+---
+
+## Messages
+
+### Turnstile Gate
+
+<RowCode>
+  <div>
+    - implementing message listener
+  </div>
+  ```tsx 
+  !from ./samples/turnstile3/component.tsx 99:112
+  ```
+</RowCode>
 
 ---
 
@@ -520,25 +548,10 @@ function Loader() {
 
 <Row>
   <div>
-    - implementing message listener
+    - binding all the logic into a hook
   </div>
   ```tsx 
-  !from ./samples/turnstile3/component.tsx 83:96
-  ```
-</Row>
-
----
-
-## Messages
-
-### Turnstile Gate
-
-<Row>
-  <div>
-    - implementing message listener
-  </div>
-  ```tsx 
-  !from ./samples/turnstile3/component.tsx 37:60
+  !from ./samples/turnstile3/component.tsx 47:72
   ```
 </Row>
 
@@ -546,53 +559,50 @@ function Loader() {
 
 # State Explosion
 
-<Box width="10em">
-  ![state explosion](./state-explosion.webp)
-</Box>
-
-<div>
-- as complexity grows, usual clean code concerns araise ("god machine" as "god function" or "god class")
-  - multiple responsibilities
-  - multiple abstraction levels
-- in a typical application, number of independent state will multiply for each component
-  - exponentional growth
-</div>
+  <ImgBox>
+    ![state explosion](./state-explosion.webp)
+  </ImgBox>
+  <TextBox>
+  - as complexity grows, usual clean code concerns araise ("god machine" as "god function" or "god class")
+    - multiple responsibilities
+    - multiple abstraction levels
+  - in a typical application, number of independent state will multiply for each component
+    - exponentional growth
+  </TextBox>
 
 ---
 
 # State Explosion
 
+## Connecting
+
+<TextBox>
 - use many machines in one framework
-- connecting
-  - have effects or messages connect to another state machine
-  - xState (actor model), useReducer
-- composing, statecharts
-  - composition is a operation that takes simple machines to create a more complex one
-  - "Harel, D. (1987). A Visual Formalism for Complex Systems. Science of Computer Programming, 231–274".
-  - was intended to be the entry point of an application
-  - visual programmation
-  - xState, redux, useContext + useReducer
-  - types of composition
-    - product (similar to Redux' slice pattern)
-    - hierarchical
-    - sum
-    - history
+- some machine can have local scopes, other can be global
+- have effects or messages connect to another state machine
+- xState (actor model)
+- useReducer (useContext)
+</TextBox>
 
 ---
 
-# Serialization
+# State Explosion
 
-- why?
-  - persistance
-  - transport
-  - dev tools
-- how
-  - serializable core (vs computed state)
-  - replay
-    - merging decentralized updates
-- unreachable states
-  - `plusTwo`
-  - code smell (make illegal states irrepresentable)
+## Composing
+
+<TextBox>
+- statecharts
+- composition is a operation that takes simple machines to create a more complex one
+- "Harel, D. (1987). A Visual Formalism for Complex Systems. Science of Computer Programming, 231–274".
+- was intended to be the entry point of an application
+- visual programmation
+- xState, Redux
+- types of composition
+  - product (similar to Redux' slice pattern)
+  - hierarchical
+  - sum
+  - history
+</TextBox>
 
 ---
 
@@ -600,9 +610,6 @@ function Loader() {
 
 - component logic
   - reusable across frameworks: [Zag](https://zagjs.com/)
-- optimistic updates
-  - have same machine on client and server
-  - but have different effects implementations
 - embedded systems
 - automata
   - multiple step fetching
@@ -630,14 +637,14 @@ function Loader() {
 ## xState
 
 <Row>
-  <div>
+  <TextBox>
   - industry standard
   - very good devtools (visual)
-  - tools for testing (solved a problem they created by not being pure enough)
-  - complete
-  - context
   - reactive system is redundant with front-end framework
-  </div>
+  - tools for testing (solved a problem they created by not being pure enough)
+  - machine have a shared context for all states 
+      - vs. a payload that depends on the type of the state
+  </TextBox>
   <QR name="XState" href="https://xstate.js.org/" />
 </Row>
 
@@ -648,11 +655,11 @@ function Loader() {
 ## Robot
 
 <Row>
-  <div>
+  <TextBox>
   - lightweight (1kb)
   - context
   - reactive system is redundant with front-end framework
-  </div>
+  </TextBox>
   <QR name="Robot" href="https://thisrobot.life/" />
 </Row>
 
@@ -663,7 +670,7 @@ function Loader() {
 ## Constellar
 
 <Row>
-  <div>
+  <TextBox>
   - personal project
   - not production ready
   - clear separation of concerns
@@ -672,7 +679,7 @@ function Loader() {
   - optics
   - would love your feedback and your stars (but mostly you feedback)
   - maybe we can make it production ready together!
-  </div>
+  </TextBox>
   <QR name="Constellar" href="https://prncss-xyz.github.io/constellar/" />
 </Row>
 
@@ -680,9 +687,9 @@ function Loader() {
 
 ## Some Smells
 
-<Box width="10em">
+<ImgBox>
   ![smell](./smell.webp)
-</Box>
+</ImgBox>
 
 ---
 
@@ -703,16 +710,18 @@ function Loader() {
 
 ---
 
-## Juliette Lamarche
+# Serialization
 
-### Let's connect
+- why?
+  - persistance
+  - transport
+  - dev tools
+- how
+  - serializable core (vs computed state)
+  - replay
+    - merging decentralized updates
+- unreachable states
+  - `plusTwo`
+  - code smell (make illegal states irrepresentable)
 
-<Row>
-  <QR name="LinkedIn" href="https://www.linkedin.com/in/juliette-lamarche-2295a4248/" />
-  <div>
-    **about me**
-    - front-end developper at Banque Nationale du Canada
-    - self-taught, math background
-    - TypeScript, React, FP
-  </div>
-</Row>
+

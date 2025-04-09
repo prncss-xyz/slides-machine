@@ -2,4 +2,5 @@
 
 html {
 	font-size: calc(max(24px, 3vh));
+  tab-size: 2em;
 }

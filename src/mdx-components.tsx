@@ -28,7 +28,7 @@ const mark: AnnotationHandler = {
 					display: 'flex',
 					borderLeft: 'solid 2px transparent',
 					borderLeftColor: annotation && color,
-					backgroundColor: annotation && `pink`,
+					backgroundColor: annotation && `lightgreen`,
 					padding: '0 0.5em',
 				})}
 			>

@@ -3,22 +3,27 @@ import { Button } from '@/components/layout/button'
 import { useReducer } from 'react'
 import { turnstileMachine } from './machine'
 import { Json } from '@/components/json'
-import { Box, Flex } from '@/generated/styled-system/jsx'
+import {
+	Box,
+	Flex,
+} from '@/generated/styled-system/jsx'
 
 function useTurnstile() {
-	// !mark[/useReducer/]
 	const [state, send] = useReducer(
+		// !mark(1:2)
 		turnstileMachine.reducer,
 		turnstileMachine.initial,
 	)
 	return {
 		pay: () => send('pay'),
-		// !mark(1:2)
+		// !mark(1:3)
 		canPay:
-			turnstileMachine.reducer(state, 'pay') !== state,
+			turnstileMachine.reducer(state, 'pay') !==
+			state,
 		push: () => send('push'),
 		canPush:
-			turnstileMachine.reducer(state, 'push') !== state,
+			turnstileMachine.reducer(state, 'push') !==
+			state,
 		state,
 	}
 }

@@ -1,9 +1,16 @@
 'use client'
-import { useEffect, useReducer, useState } from 'react'
+import {
+	useEffect,
+	useReducer,
+	useState,
+} from 'react'
 import { timerMachine } from './machine'
 import { Json } from '@/components/json'
 import { count } from './count'
-import { Box, Flex } from '@/generated/styled-system/jsx'
+import {
+	Box,
+	Flex,
+} from '@/generated/styled-system/jsx'
 import { Button } from '@/components/layout/button'
 
 function useTimer(now: number) {
@@ -16,6 +23,7 @@ function useTimer(now: number) {
 		toggle: () => send({ type: 'toggle', now }),
 		reset: () => send({ type: 'reset', now }),
 		count: Math.round(count(state, now) / 1000),
+		// !mark(1:4)
 		next: timerMachine.reducer(state, {
 			type: 'toggle',
 			now,
@@ -35,6 +43,7 @@ function useNow() {
 	return now
 }
 
+//!mark(1:4)
 const labels = {
 	stopped: 'stop',
 	running: 'run',

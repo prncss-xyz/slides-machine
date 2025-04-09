@@ -3,11 +3,11 @@ import { styled } from '@/generated/styled-system/jsx'
 
 const style = cva({
 	base: {
-    py: 2,
+		py: 2,
 		px: 3,
 		borderRadius: 3,
 		color: 'white',
-    fontSize: 3,
+		fontSize: 3,
 		backgroundColor: 'link',
 		'&:disabled': {
 			color: 'grayA8',

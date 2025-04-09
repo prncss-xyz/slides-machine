@@ -33,7 +33,10 @@ export const turnstileMachine = {
 			case 'payment':
 				switch (event.type) {
 					case 'success':
-						emit({ type: 'success', amount: event.amount })
+						emit({
+							type: 'success',
+							amount: event.amount,
+						})
 						return { type: 'unlocked' }
 					case 'error':
 						emit({ type: 'error' })

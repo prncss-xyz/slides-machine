@@ -4,7 +4,7 @@ const config = {
 	singleQuote: true,
 	trailingComma: 'all',
 	useTabs: true,
-	printWidth: 60,
+	printWidth: 50,
 }
 
 export default config

@@ -3,7 +3,10 @@ type Event = 'pay' | 'push'
 
 export const turnstileMachine = {
 	initial: 'locked' as State,
-	reducer: function (state: State, event: Event): State {
+	reducer: function (
+		state: State,
+		event: Event,
+	): State {
 		switch (state) {
 			case 'locked':
 				switch (event) {

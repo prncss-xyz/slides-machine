@@ -6,6 +6,7 @@
 - codehike: highlight focused code
 
 ## Styling
+
 - better responsivity
 - use colorscheme palette
 - hide qr when small
